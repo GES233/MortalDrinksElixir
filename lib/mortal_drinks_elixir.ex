@@ -1,6 +1,6 @@
-defmodule World do
+defmodule MortalDrinksElixir do
   @moduledoc """
-  Documentation for `World`.
+  Documentation for `MortalDrinksElixir`.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule World do
 
   ## Examples
 
-      iex> World.hello()
+      iex> MortalDrinksElixir.hello()
       :world
 
   """

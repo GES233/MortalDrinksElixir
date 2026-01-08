@@ -1,12 +1,9 @@
-defmodule VividPuppet.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
+defmodule MortalDrinksElixir.Application do
   @moduledoc false
 
   use Application
 
-  @impl true
-  def start(_type, _args) do
+  def start(_start_type, _start_args) do
     children = [
       # Starts a worker by calling: VividPuppet.Worker.start_link(arg)
       # {VividPuppet.Worker, arg}
