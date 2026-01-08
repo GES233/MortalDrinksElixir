@@ -7,6 +7,12 @@ defmodule MortalDrinksElixir.WebInterface do
     use Phoenix.LiveView, layout: {__MODULE__, :live}
 
     def render("live.html", assigns) do
+      assigns =
+        assign(assigns,
+          makeup_style:
+            :monokai_style |> Makeup.stylesheet() |> IO.inspect() |> Phoenix.HTML.raw()
+        )
+
       ~H"""
       <!DOCTYPE html>
       <html>
@@ -18,8 +24,12 @@ defmodule MortalDrinksElixir.WebInterface do
             .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 95vh; }
             .panel { border: 2px solid #333; padding: 10px; overflow: hidden; }
             .active { border-color: #0f0; box-shadow: 0 0 10px #0f0; }
-            pre {
+
+            <%= Phoenix.HTML.raw(@makeup_style) %>
+
+            pre, code {
               font-family: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
+              font-size: 14px; line-height: 1.4;
             }
           </style>
           <script src="https://cdn.jsdelivr.net/npm/phoenix@1.8.1/priv/static/phoenix.min.js"></script>
@@ -52,7 +62,7 @@ defmodule MortalDrinksElixir.WebInterface do
       <div class="grid">
         <div class="panel">
           <h3>// SOURCE_CODE</h3>
-          <%= @code_snippet %>
+          <%= Phoenix.HTML.raw(@code_snippet) %>
         </div>
         <div class="panel active">
           <h3>// VISUALIZATION</h3>
@@ -67,9 +77,15 @@ defmodule MortalDrinksElixir.WebInterface do
       if connected?(socket),
         do: Phoenix.PubSub.subscribe(MortalDrinksElixir.PubSub, "world_clock")
 
+      code = """
+      defmodule Foo do
+        defstruct [:bar]
+      end
+      """
+
       {:ok,
        assign(socket,
-         code_snippet: Phoenix.HTML.raw("<pre>Loading...</pre>"),
+         code_snippet: Makeup.highlight(code), # Phoenix.HTML.raw("<pre>Loading...</pre>"),
          status: "IDLE",
          tick: 0
        )}
