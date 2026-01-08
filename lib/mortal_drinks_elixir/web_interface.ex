@@ -10,7 +10,8 @@ defmodule MortalDrinksElixir.WebInterface do
       assigns =
         assign(assigns,
           makeup_style:
-            :monokai_style |> Makeup.stylesheet() |> IO.inspect() |> Phoenix.HTML.raw()
+            :monokai_style |> Makeup.stylesheet() |> Phoenix.HTML.raw()
+            # TODO: update
         )
 
       ~H"""
@@ -68,6 +69,7 @@ defmodule MortalDrinksElixir.WebInterface do
           <h3>// VISUALIZATION</h3>
           <p>Status: <%= @status %></p>
           <p>Tick: <%= @tick %></p>
+          <pre style="font-size: 20px; color: #ff00ff;"><%= @animation %></pre>
         </div>
       </div>
       """
@@ -85,14 +87,24 @@ defmodule MortalDrinksElixir.WebInterface do
 
       {:ok,
        assign(socket,
-         code_snippet: Makeup.highlight(code), # Phoenix.HTML.raw("<pre>Loading...</pre>"),
+         code_snippet: Makeup.highlight(code),
          status: "IDLE",
-         tick: 0
+         tick: 0,
+         animation: "(-_-)"
        )}
     end
 
     def handle_info({:tick, count}, socket) do
-      {:noreply, assign(socket, tick: count)}
+      frame = rem(count, 4)
+
+      emoji = case frame do
+        0 -> "(>_<)"
+        1 -> "(o_o)"
+        2 -> "(<_<)"
+        3 -> "(o_o)"
+      end
+
+      {:noreply, assign(socket, tick: count, animation: emoji)}
     end
   end
 
