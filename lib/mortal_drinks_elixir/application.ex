@@ -5,10 +5,10 @@ defmodule MortalDrinksElixir.Application do
 
   def start(_start_type, _start_args) do
     # Load before Web interface activated.
-    # Makeup.Registry.register_lexer(
-    #   MakeupKanren,
-    #   options: [], names: ["miniKanren", "mini_kanren", "Kanren"]
-    # )
+    Makeup.Registry.register_lexer(
+      MakeupKanren,
+      options: [], names: ["miniKanren", "mini_kanren", "Kanren"]
+    )
 
     Application.put_env(:mord_ex, MortalDrinksElixir.WebInterface.Endpoint,
       http: [ip: {127, 0, 0, 1}, port: 4000],

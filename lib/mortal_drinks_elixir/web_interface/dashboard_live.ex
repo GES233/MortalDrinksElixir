@@ -72,14 +72,21 @@ defmodule MortalDrinksElixir.WebInterface.DashboardLive do
       do: Phoenix.PubSub.subscribe(MortalDrinksElixir.PubSub, "world_clock")
 
     code = """
-    defmodule Foo do
-      defstruct [:bar]
-    end
+    ; Comment
+    (defrel (appendo l s out)
+      (conde
+        ((== '() l) (== s out))
+        ((fresh (a d res)
+          (== `(,a . ,d) l)
+          (== `(,a . ,res) out)
+          (appendo d s res)))))
+
+    (run* (q) (appendo '(a b) '(c d) q))
     """
 
     {:ok,
      assign(socket,
-       code_snippet: Makeup.highlight(code),
+       code_snippet: Makeup.highlight(code, lexer: MakeupKanren),
        status: "IDLE",
        tick: 0,
        animation: "(-_-)"

@@ -33,7 +33,9 @@ defmodule MortalDrinksElixir.MixProject do
 
       ## Add code highlight
       {:makeup_elixir, "~> 1.0"},
-      {:makeup, "~> 1.2"}
+      {:makeup, "~> 1.2"},
+      # Used for build miniKanren lexers
+      {:nimble_parsec, "~> 1.4"},
     ]
   end
 end
