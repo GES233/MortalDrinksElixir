@@ -18,6 +18,7 @@ Install [Elixir](https://elixir-lang.org/install.html).
 
 ```sh  
 mix local.hex  
+```
 
 Then, clone the repository and install dependencies.
 
