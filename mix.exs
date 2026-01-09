@@ -8,7 +8,7 @@ defmodule MortalDrinksElixir.MixProject do
       build_path: "_build",
       deps_path: "deps",
       lockfile: "mix.lock",
-      elixir: "~> 1.19",
+      elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       listeners: [Phoenix.CodeReloader]
@@ -24,7 +24,8 @@ defmodule MortalDrinksElixir.MixProject do
 
   defp deps do
     [
-      ## Embedd Micro Phoenix as UI
+      ## Embedd Phoenix as UI
+      # (not using it via `mix phx.new`)
       {:phoenix, "~> 1.8"},
       {:phoenix_live_view, "~> 1.1"},
       {:bandit, "~> 1.10"},
