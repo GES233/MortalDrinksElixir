@@ -131,6 +131,9 @@ defmodule MortalDrinksElixir.WebInterface do
 
     socket("/live", Phoenix.LiveView.Socket)
 
+    # When static resource is too large
+    # apply Plug.Static
+
     plug(Plug.Session,
       store: :cookie,
       key: "_mortal_drinks_key",

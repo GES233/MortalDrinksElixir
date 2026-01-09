@@ -1,18 +1,11 @@
 defmodule MortalDrinksElixir do
   @moduledoc """
-  Documentation for `MortalDrinksElixir`.
-  """
 
-  @doc """
-  Hello world.
+  The program MortalDrinksElixir implements an application that
+  provide a playground to simulate a world without meaning, and the
+  only purpose is to generate vivid stimulus(in `World`).
 
-  ## Examples
-
-      iex> MortalDrinksElixir.hello()
-      :world
+  It is an elixir-implementation for `GodDrinksJava` in Mili's `world.execute(me)`.
 
   """
-  def hello do
-    :world
-  end
 end

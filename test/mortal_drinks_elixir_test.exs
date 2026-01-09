@@ -3,6 +3,6 @@ defmodule MortalDrinksElixirTest do
   doctest MortalDrinksElixir
 
   test "greets the world" do
-    assert MortalDrinksElixir.hello() == :world
+    assert 1 + 1 == 2
   end
 end

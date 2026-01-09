@@ -1,6 +1,6 @@
 defmodule MakeupKanren do
   @moduledoc """
-  miniKanren lexer for the Makeup syntax highlighter.
+  miniKanren(Scheme style) lexer for the Makeup syntax highlighter.
 
   Using *The Reasoned Schemer*'s defination.
   """
