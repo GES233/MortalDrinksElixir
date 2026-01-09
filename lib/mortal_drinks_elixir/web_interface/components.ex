@@ -6,9 +6,14 @@ defmodule MortalDrinksElixir.WebInterface.Components do
     ~H"""
     <div class="panel zone-code" id="panel-source">
       <div class="panel-header">// SOURCE_CODE</div>
-      <div class="panel-content">
+      <div class="panel-content" phx-look=".CodeLiveRenderer">
         <%= render_slot(@inner_block) %>
       </div>
+      <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeLiveRenderer">
+        export default {
+          mounted() {}
+        }
+      </script>
     </div>
     """
   end
@@ -33,15 +38,15 @@ defmodule MortalDrinksElixir.WebInterface.Components do
     <div class="panel zone-logs" id="panel-logs">
       <div class="panel-header">// KERNEL_OUTPUT_BUFFER</div>
       <div class="panel-content" id="log-container">
-    <%= for item <- @logs do %>
-      <%= case item do %>
-        <% {level, content} -> %>
-          <.log_item level={level}>{content}</.log_item>
-        <% content -> %>
-          <.log_item>{content}</.log_item>
+      <%= for item <- @logs do %>
+        <%= case item do %>
+          <% {level, content} -> %>
+            <.log_item level={level}>{content}</.log_item>
+          <% content -> %>
+            <.log_item>{content}</.log_item>
+        <% end %>
       <% end %>
-    <% end %>
-    </div>
+      </div>
     </div>
     """
   end

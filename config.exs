@@ -3,10 +3,16 @@ import Config
 config :esbuild,
   version: "0.25.4",
   mord_ex: [
-    args: ~w(js/app.js --bundle --target=es2022 --outdir=../../../../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
+    args: ~w(js/app.js --bundle --target=es2022
+      --outdir=../../../../priv/static/assets/js
+      --external:/fonts/* --external:/images/*
+      --alias:@=.),
     cd: Path.expand("lib/mortal_drinks_elixir/web_interface/assets", __DIR__),
     env: %{"NODE_PATH" => [Path.expand("deps", __DIR__), Mix.Project.build_path()]}
   ]
+
+# config :phoenix_live_view, :colocated_js,
+#       disable_symlink_warning: true
 
 config :mord_ex, MortalDrinksElixir.WebInterface.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],

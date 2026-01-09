@@ -13,6 +13,7 @@ defmodule MortalDrinksElixir.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
+      compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader]
     ]
   end
