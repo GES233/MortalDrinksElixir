@@ -1,8 +1,20 @@
 defmodule MortalDrinksElixir.WebInterface.Components do
   use Phoenix.Component
 
+  slot :inner_block, required: true
+  def code(assigns) do
+    ~H"""
+    <div class="panel zone-code" id="panel-source">
+      <div class="panel-header">// SOURCE_CODE</div>
+      <div class="panel-content">
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
+    """
+  end
+
   attr :level, :atom, values: [:info, :error, :warn, :debug]
-  attr :content, :string, required: true
+  slot :inner_block, required: true
   def log_item(assigns) do
     extra_class = if !is_nil(assigns[:level]) do
       ["log-entry", Atom.to_string(assigns[:level])] |> Enum.join(" ")
@@ -12,20 +24,25 @@ defmodule MortalDrinksElixir.WebInterface.Components do
     assigns = assign(assigns, log_class: extra_class)
 
     ~H"""
-      <div class={@log_class}><%= @content %></div>
+      <div class={@log_class}><%= render_slot(@inner_block) %></div>
     """
   end
 
-  def log(assigns) do
+  def log_entry(assigns) do
     ~H"""
+    <div class="panel zone-logs" id="panel-logs">
+      <div class="panel-header">// KERNEL_OUTPUT_BUFFER</div>
+      <div class="panel-content" id="log-container">
     <%= for item <- @logs do %>
       <%= case item do %>
         <% {level, content} -> %>
-          <.log_item level={level} content={content} />
+          <.log_item level={level}>{content}</.log_item>
         <% content -> %>
-          <.log_item content={content} />
+          <.log_item>{content}</.log_item>
       <% end %>
     <% end %>
+    </div>
+    </div>
     """
   end
 
