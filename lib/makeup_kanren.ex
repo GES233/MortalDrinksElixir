@@ -6,47 +6,39 @@ defmodule MakeupKanren do
   """
   import NimbleParsec
   import Makeup.Lexer.Combinators
-  # import Makeup.Lexer.Groups
 
   @behaviour Makeup.Lexer
 
   ###################################################################
-  # 1. 基础字符定义
+  # 1. Basic Characters Defination
   ###################################################################
 
-  # Scheme/Lisp 允许的标识符字符非常宽泛，但通常不包含括号、引号、分号和空白
-  # 这里定义一个宽泛的非分隔符集合作为标识符的一部分
-  # 注意：miniKanren 中的标识符可能包含 *, -, ?, ! 等符号
   allowed_in_ident =
     utf8_char([
       {:not, ?\s}, {:not, ?\t}, {:not, ?\n}, {:not, ?\r},
       {:not, ?(}, {:not, ?)}, {:not, ?[}, {:not, ?]},
-      {:not, ?"}, {:not, ?;}, {:not, ?'} # 单引号通常用于 quote
+      {:not, ?"}, {:not, ?;}, {:not, ?'}
     ])
 
   ###################################################################
-  # 2. 组合子 (Combinators)
+  # 2. Combinators
   ###################################################################
 
   whitespace = ascii_string([?\s, ?\t, ?\n, ?\r], min: 1) |> token(:whitespace)
 
-  # 注释：以分号 ; 开头直到行尾
   comment =
     string(";")
     |> repeat(utf8_char([{:not, ?\n}]))
     |> token(:comment_single)
 
-  # 数字：整数 (简化版，未处理浮点或分数，因为 miniKanren 主要处理逻辑)
   digits = ascii_string([?0..?9], min: 1)
   number =
     optional(string("-"))
     |> concat(digits)
     |> token(:number_integer)
 
-  # 字符串：双引号包裹
   string_literal = string_like("\"", "\"", [string("\\\"")], :string)
 
-  # 标点符号/分隔符
   punctuation =
     choice([
       string("("),
@@ -60,14 +52,12 @@ defmodule MakeupKanren do
     ])
     |> token(:punctuation)
 
-  # 标识符 (Identifiers/Symbols)
-  # 我们先匹配所有看起来像标识符的东西，然后在 post_process 中区分关键字
   identifier =
     times(allowed_in_ident, min: 1)
     |> token(:name)
 
   ###################################################################
-  # 3. 根解析器
+  # 3. Root Parser
   ###################################################################
 
   root_element_combinator =
@@ -79,11 +69,11 @@ defmodule MakeupKanren do
       number,
       identifier
     ])
-    # |> token(:root_element_combinator)
 
   ###################################################################
-  # 4. API 实现
+  # 4. API Implementation
   ###################################################################
+
 @impl Makeup.Lexer
   def lex(text, opts \\ []) do
     match_groups? = Keyword.get(opts, :match_groups, true)
@@ -115,8 +105,6 @@ defmodule MakeupKanren do
   @impl Makeup.Lexer
   defparsec(:root, repeat(parsec(:root_element)), inline: false)
 
-  # 这是一个很好的实践，用于处理特定的 token 映射
-  # @impl Makeup.Lexer
   def post_process_token(token, _opts \\ []) do
     case token do
       {:name, attrs, text} ->
@@ -128,7 +116,7 @@ defmodule MakeupKanren do
   end
 
   ###################################################################
-  # 5. 关键字映射 (Token Classification)
+  # 5. Token Classification
   ###################################################################
 
   defp process_identifier(text, attrs) do
@@ -138,18 +126,25 @@ defmodule MakeupKanren do
       ~c"run*" -> {:keyword_declaration, attrs, text}
       ~c"fresh" -> {:keyword, attrs, text}
       ~c"conde" -> {:keyword, attrs, text}
+      ~c"condᵉ" -> {:keyword, attrs, text}
       ~c"conda" -> {:keyword, attrs, text} # Soft cut (扩展)
+      ~c"condᵃ" -> {:keyword, attrs, text}
       ~c"condu" -> {:keyword, attrs, text} # Committed choice (扩展)
+      ~c"condᵘ" -> {:keyword, attrs, text}
       ~c"defrel" -> {:keyword_declaration, attrs, text} # 定义关系
       ~c"project" -> {:keyword, attrs, text}
 
       # --- Operator ---
       ~c"==" -> {:operator, attrs, text} # Unification
+      ~c"≡" -> {:operator, attrs, text}
       ~c"=/=" -> {:operator, attrs, text} # Disequality constraint
+      ~c"≠" -> {:operator, attrs, text}
+      ~c"≢" -> {:operator, attrs, text}
 
       # --- Scheme Kyword (Context) ---
       ~c"define" -> {:keyword_declaration, attrs, text}
       ~c"lambda" -> {:keyword_declaration, attrs, text}
+      ~c"λ" -> {:keyword_declaration, attrs, text}
       ~c"let" -> {:keyword, attrs, text}
       ~c"cons" -> {:name_builtin, attrs, text}
       ~c"car" -> {:name_builtin, attrs, text}
@@ -159,10 +154,10 @@ defmodule MakeupKanren do
       ~c"else" -> {:keyword, attrs, text}
 
       # --- Constants ---
-      ~c"#t" -> {:name_constant, attrs, text}
-      ~c"#f" -> {:name_constant, attrs, text}
-      ~c"#u" -> {:name_constant, attrs, text} # fail in some impls
-      ~c"#s" -> {:name_constant, attrs, text} # succeed in some impls
+      ~c"#t" -> {:string_symbol, attrs, text}
+      ~c"#f" -> {:string_symbol, attrs, text}
+      ~c"#u" -> {:string_symbol, attrs, text} # fail in some impls
+      ~c"#s" -> {:string_symbol, attrs, text} # succeed in some impls
 
       _ -> {:name, attrs, text}
     end

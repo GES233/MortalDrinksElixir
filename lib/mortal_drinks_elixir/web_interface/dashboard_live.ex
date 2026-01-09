@@ -72,9 +72,8 @@ defmodule MortalDrinksElixir.WebInterface.DashboardLive do
       do: Phoenix.PubSub.subscribe(MortalDrinksElixir.PubSub, "world_clock")
 
     code = """
-    ; Comment
     (defrel (appendo l s out)
-      (conde
+      (condᵉ
         ((== '() l) (== s out))
         ((fresh (a d res)
           (== `(,a . ,d) l)
@@ -82,6 +81,7 @@ defmodule MortalDrinksElixir.WebInterface.DashboardLive do
           (appendo d s res)))))
 
     (run* (q) (appendo '(a b) '(c d) q))
+    #f
     """
 
     {:ok,

@@ -34,6 +34,17 @@ defmodule MortalDrinksElixir.WebInterface.Scaffold do
 
           <%= Phoenix.HTML.raw(@makeup_style) %>
 
+          .zone-code .highlight .ss {
+            background: #2aa198;
+            border-radius: 4px;
+            padding: 0 4px;
+            font-weight: bold;
+          }
+
+          .zone-code .highlight .k, .kd {
+            font-weight: bold;
+          }
+
           pre, code {
             font-family: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
             font-size: 14px; line-height: 1.4;
