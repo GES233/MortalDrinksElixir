@@ -6,11 +6,13 @@ defmodule MortalDrinksElixir.MixProject do
       app: :mord_ex,
       version: "0.1.0",
       build_path: "_build",
+      config_path: "config.exs",
       deps_path: "deps",
       lockfile: "mix.lock",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      aliases: aliases(),
       listeners: [Phoenix.CodeReloader]
     ]
   end
@@ -32,11 +34,18 @@ defmodule MortalDrinksElixir.MixProject do
       {:jason, "~> 1.4"},
       {:phoenix_live_reload, "~> 1.6"},
 
+      ## Javacript bundle
+      {:esbuild, "~> 0.10"},
+
       ## Add code highlight
       {:makeup_elixir, "~> 1.0"},
       {:makeup, "~> 1.2"},
       # Used for build miniKanren lexers
       {:nimble_parsec, "~> 1.4"},
     ]
+  end
+
+  defp aliases do
+    []
   end
 end

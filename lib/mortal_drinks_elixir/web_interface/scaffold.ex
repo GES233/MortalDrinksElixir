@@ -183,23 +183,7 @@ defmodule MortalDrinksElixir.WebInterface.Scaffold do
 
           .highlight { background: transparent !important; }
         </style>
-        <script src="https://cdn.jsdelivr.net/npm/phoenix@1.8.1/priv/static/phoenix.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/phoenix_live_view@1.1.19/priv/static/phoenix_live_view.min.js"></script>
-        <script>
-          if (!window.liveSocket) {
-            let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-
-            window.liveSocket = new window.LiveView.LiveSocket("/live", window.Phoenix.Socket, {
-              params: {_csrf_token: csrfToken}
-            });
-
-            window.liveSocket.connect();
-            window.liveSocket.enableDebug();
-          } else {
-            window.liveSocket.connect();
-            window.liveSocket.enableDebug();
-          }
-        </script>
+        <script defer phx-track-static type="text/javascript" src="/assets/js/app.js"></script>
     </head>
       <body>
         <%= @inner_content %>
