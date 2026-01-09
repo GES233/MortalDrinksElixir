@@ -1,21 +1,21 @@
 # MortalDrinksElixir  
-  
+
 An Elixir implementation of `GodDrinksJava` from Mili's `World.execute(me);`.  
-  
+
 ## Inspiration  
-  
+
 * Personal experiences and trauma  
     * < https://ges233.github.io/2024/06/World-execute-me-lyrics-analyse/ >  
 * PVs (Music Videos) in other languages and formats created since 2019  
-  
+
 ## Usage  
-  
+
 ### Installation  
-  
+
 Install [Elixir](https://elixir-lang.org/install.html).  
-  
+
 *If this is your first time installing Elixir, don't forget to install Hex.*  
-  
+
 ```sh  
 mix local.hex  
 
