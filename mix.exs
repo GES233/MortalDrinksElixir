@@ -10,7 +10,8 @@ defmodule MortalDrinksElixir.MixProject do
       lockfile: "mix.lock",
       elixir: "~> 1.19",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
