@@ -74,16 +74,6 @@ defmodule WebInterface.Components do
     """
   end
 
-  attr :animation, :string
-  def visual(assigns) do
-    ~H"""
-      <div class="font-anime text-center">
-      <h1 class="text-5xl"><%= @animation %></h1>
-      <p class="opacity-60 mt-3">RENDERING VIEWPORT</p>
-      </div>
-    """
-  end
-
   # TODO:
   # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
@@ -119,6 +109,16 @@ defmodule WebInterface.Components do
           <% end %>
           </div>
         <% end %>
+      </div>
+    """
+  end
+
+  attr :animation, :string
+  def visual(assigns) do
+    ~H"""
+      <div class="font-anime text-center">
+      <h1 class="text-5xl"><%= @animation %></h1>
+      <p class="opacity-60 mt-3">RENDERING VIEWPORT</p>
       </div>
     """
   end
