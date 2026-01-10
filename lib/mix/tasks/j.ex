@@ -25,6 +25,14 @@ defmodule Mix.Tasks.J do
       #{File.read!("lib/web_interface/assets/js/app.js")}
       ```
 
+      ## CSS
+
+      Use TailwindCSSv4
+
+      ```tailwindcss
+      #{File.read!("lib/web_interface/assets/css/app.css")}
+      ```
+
       ## Config
 
       ```elixir

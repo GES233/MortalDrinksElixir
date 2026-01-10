@@ -35,8 +35,9 @@ defmodule MortalDrinksElixir.MixProject do
       {:jason, "~> 1.4"},
       {:phoenix_live_reload, "~> 1.6"},
 
-      ## Javacript bundle
+      ## Assets
       {:esbuild, "~> 0.10"},
+      {:tailwind, "~> 0.3"},
 
       ## Add code highlight
       {:makeup_elixir, "~> 1.0"},
@@ -48,7 +49,11 @@ defmodule MortalDrinksElixir.MixProject do
 
   defp aliases do
     [
-      pre: ["esbuild.install --if-missing", "compile", "esbuild mord_ex"]
+      pre: [
+        "esbuild.install --if-missing", "tailwind.install --if-missing",
+        "compile",
+        "esbuild mord_ex", "tailwind mord_ex"
+      ]
     ]
   end
 end

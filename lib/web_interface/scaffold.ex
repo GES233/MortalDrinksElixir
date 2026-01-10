@@ -32,19 +32,6 @@ defmodule WebInterface.Scaffold do
             overflow: hidden;
           }
 
-          <%= Phoenix.HTML.raw(@makeup_style) %>
-
-          .zone-code .highlight .ss {
-            background: #2aa198;
-            border-radius: 4px;
-            padding: 0 4px;
-            font-weight: bold;
-          }
-
-          .zone-code .highlight .k, .kd {
-            font-weight: bold;
-          }
-
           pre, code {
             font-family: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
             font-size: 14px; line-height: 1.4;
@@ -181,8 +168,22 @@ defmodule WebInterface.Scaffold do
           .hud-label { color: #555; }
           .hud-value { color: var(--phosphor-main); }
 
+          <%= Phoenix.HTML.raw(@makeup_style) %>
+
+          .zone-code .highlight .ss {
+            background: #2aa198;
+            border-radius: 4px;
+            padding: 0 4px;
+            font-weight: bold;
+          }
+
+          .zone-code .highlight .k, .kd {
+            font-weight: bold;
+          }
+
           .highlight { background: transparent !important; }
         </style>
+        <link phx-track-static rel="stylesheet" href="/assets/css/app.css" />
         <script defer phx-track-static type="text/javascript" src="/assets/js/app.js"></script>
     </head>
       <body>
