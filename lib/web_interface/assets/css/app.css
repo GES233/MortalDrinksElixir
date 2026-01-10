@@ -2,7 +2,16 @@
 
 @source "../css";
 @source "../js";
-@source "../../web_interface";
+@source "../../../web_interface";
+
+@theme {
+  --color-phosphor-main: #00ff41;
+  --color-phosphor-shadow: #004411;
+  --color-terminal-black: #050505;
+  --font-code: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
+  --font-lyrics: "Fira Code", Consolas, monospace;
+  --font-anime: "Fira Code", Consolas, monospace;
+}
 
 @custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
 @custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);

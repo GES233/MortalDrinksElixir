@@ -18,24 +18,21 @@ defmodule WebInterface.Scaffold do
           :root {
             --phosphor-main: #00ff41;
             --phosphor-dim: #004411;
-            --bg-color: #050505;
             --panel-border: 2px solid #333;
             --panel-active: 2px solid #00ff41;
           }
 
           body {
-            background: var(--bg-color);
-            color: var(--phosphor-main);
             font-family: 'Fira Code', 'Consolas', monospace;
             margin: 0;
             height: 100vh;
             overflow: hidden;
           }
 
-          pre, code {
+          /* pre, code {
             font-family: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
             font-size: 14px; line-height: 1.4;
-          }
+          } */
 
           .layout-grid {
             display: grid;
@@ -90,15 +87,6 @@ defmodule WebInterface.Scaffold do
             line-height: 1.5;
           }
 
-          .zone-code pre { margin: 0; font-size: 12px; }
-
-          .zone-logs { font-family: Consolas, 'Courier New', monospace; font-size: 12px; color: #aaa; }
-          .log-entry { margin-bottom: 4px; border-left: 2px solid #333; padding-left: 5px; }
-          .log-entry.info { border-color: #00405f }
-          .log-entry.debug { color: #00ef00; border-color: #003f00 }
-          .log-entry.warn { color: #ffff00; border-color: #5f3f00; }
-          .log-entry.error { color: #ff0000; border-color: #7f0000; }
-
           .zone-vis {
             border: var(--panel-active);
             justify-content: center;
@@ -124,39 +112,7 @@ defmodule WebInterface.Scaffold do
             width: 100%;
           }
 
-          .lyric-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 5px var(--phosphor-main);
-          }
-
-          .lyrics-wrapper {
-            text-align: left;
-            max-width: 70%;
-          }
-
-          .lyric-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 5px var(--phosphor-main);
-            line-height: 1.2;
-          }
-
-          .lyric-sub {
-            font-size: 12px;
-            color: var(--phosphor-main);
-            opacity: 0.7;
-            margin-top: 4px;
-          }
-
           .hud-wrapper {
-            text-align: right;
-            font-family: 'Fira Code', 'Consolas', monospace;
-            font-size: 10px;
-            color: var(--phosphor-dim);
-            display: grid;
             grid-template-columns: auto auto;
             gap: 2px 10px;
             line-height: 1.2;
@@ -164,12 +120,9 @@ defmodule WebInterface.Scaffold do
             padding-left: 15px;
           }
 
-          .hud-item { display: contents; }
-          .hud-label { color: #555; }
-          .hud-value { color: var(--phosphor-main); }
-
           <%= Phoenix.HTML.raw(@makeup_style) %>
 
+          /* Used for #f/#u/#s/#t in miniKanren */
           .zone-code .highlight .ss {
             background: #2aa198;
             border-radius: 4px;
@@ -186,7 +139,7 @@ defmodule WebInterface.Scaffold do
         <link phx-track-static rel="stylesheet" href="/assets/css/app.css" />
         <script defer phx-track-static type="text/javascript" src="/assets/js/app.js"></script>
     </head>
-      <body>
+      <body class="m-0 h-screen overflow-hidden text-phosphor-main bg-terminal-black font-lyrics">
         <%= @inner_content %>
       </body>
     </html>

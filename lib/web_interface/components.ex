@@ -28,9 +28,9 @@ defmodule WebInterface.Components do
   slot :inner_block, required: true
   def code(assigns) do
     ~H"""
-    <div class="panel zone-code" id={@id}>
+    <div class="panel zone-code font-code" id={@id}>
       <div class="panel-header">// SOURCE_CODE</div>
-      <div class="panel-content" phx-look=".CodeLiveRenderer">
+      <div class="panel-content text-sm leading-snug font-code my-0" phx-look=".CodeLiveRenderer">
         <%= render_slot(@inner_block) %>
       </div>
       <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeLiveRenderer">
@@ -46,7 +46,7 @@ defmodule WebInterface.Components do
   attr :animation, :string
   def visual(assigns) do
     ~H"""
-    <div class="panel zone-vis" id={@id}>
+    <div class="panel zone-vis font-anime" id={@id}>
       <div style="text-align: center;">
         <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
         <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
@@ -59,19 +59,39 @@ defmodule WebInterface.Components do
   # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
     ~H"""
-    <div class="panel zone-logs" id="panel-logs">
+    <div class="panel zone-logs font-lyrics" id="panel-logs">
       <div class="panel-header">// KERNEL_OUTPUT_BUFFER</div>
       <div class="panel-content" id="log-container">
       <%= for item <- @logs do %>
-        <%= case item do %>
-          <% {content, nil} -> %>
-            <div class="log-entry">{content}</div>
-          <% {content, level} when is_atom(level) -> %>
-            <div class={~w(log-entry #{Atom.to_string(level)})}>{content}</div>
-          <% content -> %>
-            <div class="log-entry">{content}</div>
+        <div class="font-lyrics text-xs text-gray-400">
+          <%= case item do %>
+            <% {content, nil} -> %>
+              <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
+                <%= content %>
+              </div>
+            <% {content, :info} -> %>
+              <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid text-gray-400">
+                <%= content %>
+              </div>
+            <% {content, :debug} -> %>
+              <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid text-green-500">
+                <%= content %>
+              </div>
+            <% {content, :warn} -> %>
+              <div class="mb-1 pl-1 text-yellow-300 border-l-2 border-solid border-amber-700">
+                <%= content %>
+              </div>
+            <% {content, :error} -> %>
+              <div class="mb-1 pl-1 text-red-600 border-l-2 border-solid border-red-800">
+                <%= content %>
+              </div>
+            <% content -> %>
+              <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
+                <%= content %>
+              </div>
+          <% end %>
+          </div>
         <% end %>
-      <% end %>
       </div>
     </div>
     """
@@ -81,9 +101,9 @@ defmodule WebInterface.Components do
   attr :sub, :string
   def lyrics(assigns) do
     ~H"""
-    <div class="lyrics-wrapper">
-      <div class="lyric-text">{@text}</div>
-      <div class="lyric-sub">&gt; {@sub}</div>
+    <div class="text-left max-w-[70%] font-lyrics">
+      <div class="text-white text-bold text-lg text-shadow-[0_0_5px_var(--phosphor-main)]">{@text}</div>
+      <div class="opacity-70 text-xs mt-1">&gt; {@sub}</div>
     </div>
     """
   end
@@ -91,12 +111,12 @@ defmodule WebInterface.Components do
   attr :items, :list, required: true
   def hud(assigns) do
     ~H"""
-    <div class="hud-wrapper">
+    <div class="hud-wrapper font-anime text-right grid pl-4 text-[10px]">
       <%= for {k, v} <- @items do %>
-        <span class="hud-label">{k}</span>
-        <span class="hud-value">{v}</span>
+        <span class="text-gray-600">{k}</span>
+        <span class="text-phosphor-main">{v}</span>
       <% end %>
-      <div class="hud-item" style="grid-column: span 2; opacity: 0.5; margin-top: 3px;">
+      <div class="contents text-phosphor-shadow mt-1 opacity-50 col-span-2">
         0x4F 0x4B 0x00
       </div>
     </div>

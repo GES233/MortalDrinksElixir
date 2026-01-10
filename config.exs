@@ -37,11 +37,14 @@ config :mord_ex, WebInterface.Endpoint,
   ],
   live_reload: [
     patterns: [
-      ~r{static/.*(js|css|png|jpeg|jpg|gif)$},
-      ~r{lib/mortal_drinks_elixir/.*(ex|exs)$}
+      ~r{assets/.*(js|css|png|jpeg|jpg|gif)$},
+      ~r{lib/mortal_drinks_elixir/.*(ex|exs)$},
+      ~r{lib/web_interface/.*(ex|exs)$}
     ]
   ],
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:mord_ex, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:mord_ex, ~w(--watch)]}
-  ]
+  ],
+  reloadable_compilers: [:elixir],
+  reloadable_apps: [:mord_ex]
