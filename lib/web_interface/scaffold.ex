@@ -107,8 +107,8 @@ defmodule WebInterface.Scaffold do
 
           .zone-logs { font-family: Consolas, 'Courier New', monospace; font-size: 12px; color: #aaa; }
           .log-entry { margin-bottom: 4px; border-left: 2px solid #333; padding-left: 5px; }
-          .log-entry.info { color: #0000e0, border-color: #00405f }
-          .log-entry.debug { color: #00ef00, border-color: #003f00 }
+          .log-entry.info { border-color: #00405f }
+          .log-entry.debug { color: #00ef00; border-color: #003f00 }
           .log-entry.warn { color: #ffff00; border-color: #5f3f00; }
           .log-entry.error { color: #ff0000; border-color: #7f0000; }
 
@@ -145,8 +145,8 @@ defmodule WebInterface.Scaffold do
           }
 
           .lyrics-wrapper {
-            text-align: left; /* 左对齐 */
-            max-width: 70%; /* 防止歌词太长撞到右边 */
+            text-align: left;
+            max-width: 70%;
           }
 
           .lyric-text {

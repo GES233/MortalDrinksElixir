@@ -1,10 +1,34 @@
 defmodule WebInterface.Components do
   use Phoenix.Component
 
+  slot :code
+  slot :console
+  slot :visual
+  slot :lyrics
+  slot :hud
+  def app(assigns) do
+    ~H"""
+    <div class="layout-grid">
+      <div class="col-left">
+        <%= render_slot(@code) %>
+        <%= render_slot(@console) %>
+      </div>
+      <div class="col-right">
+        <%= render_slot(@visual) %>
+        <div class="panel zone-lyrics">
+        <%= render_slot(@lyrics) %>
+        <%= render_slot(@hud) %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  attr :id, :string
   slot :inner_block, required: true
   def code(assigns) do
     ~H"""
-    <div class="panel zone-code" id="panel-source">
+    <div class="panel zone-code" id={@id}>
       <div class="panel-header">// SOURCE_CODE</div>
       <div class="panel-content" phx-look=".CodeLiveRenderer">
         <%= render_slot(@inner_block) %>
@@ -18,21 +42,21 @@ defmodule WebInterface.Components do
     """
   end
 
-  attr :level, :atom, values: [:info, :error, :warn, :debug]
-  slot :inner_block, required: true
-  def log_item(assigns) do
-    extra_class = if !is_nil(assigns[:level]) do
-      ["log-entry", Atom.to_string(assigns[:level])] |> Enum.join(" ")
-    else
-      "log-entry"
-    end
-    assigns = assign(assigns, log_class: extra_class)
-
+  attr :id, :string
+  attr :animation, :string
+  def visual(assigns) do
     ~H"""
-      <div class={@log_class}><%= render_slot(@inner_block) %></div>
+    <div class="panel zone-vis" id={@id}>
+      <div style="text-align: center;">
+        <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
+        <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
+      </div>
+    </div>
     """
   end
 
+  # TODO:
+  # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
     ~H"""
     <div class="panel zone-logs" id="panel-logs">
@@ -40,13 +64,26 @@ defmodule WebInterface.Components do
       <div class="panel-content" id="log-container">
       <%= for item <- @logs do %>
         <%= case item do %>
-          <% {level, content} -> %>
-            <.log_item level={level}>{content}</.log_item>
+          <% {content, nil} -> %>
+            <div class="log-entry">{content}</div>
+          <% {content, level} when is_atom(level) -> %>
+            <div class={~w(log-entry #{Atom.to_string(level)})}>{content}</div>
           <% content -> %>
-            <.log_item>{content}</.log_item>
+            <div class="log-entry">{content}</div>
         <% end %>
       <% end %>
       </div>
+    </div>
+    """
+  end
+
+  attr :text, :string
+  attr :sub, :string
+  def lyrics(assigns) do
+    ~H"""
+    <div class="lyrics-wrapper">
+      <div class="lyric-text">{@text}</div>
+      <div class="lyric-sub">&gt; {@sub}</div>
     </div>
     """
   end

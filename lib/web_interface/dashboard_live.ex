@@ -5,41 +5,40 @@ defmodule WebInterface.DashboardLive do
 
   def render(assigns) do
     ~H"""
-    <div class="layout-grid">
-      <div class="col-left">
-        <Components.code>
+    <Components.app>
+      <:code>
+        <Components.code id={"panel-source"}>
           <%= Phoenix.HTML.raw(@code_snippet) %>
         </Components.code>
+      </:code>
+      <:console>
         <Components.log_entry logs={[
-          "> System boot sequence initiated...",
-          "> Loading world assets... OK",
-          {:warn, "> Warning: Emotion engine offline."},
-          "> Conductor ready."
+          {"> System boot sequence initiated...", :info},
+          {"> Loading world assets... OK", :info},
+          {"> Warning: Emotion engine offline.", :warn},
+          {"> Conductor ready.", :info}
         ]}/><!-- Mock log add phx-update="stream" -->
-      </div>
-      <div class="col-right">
-        <div class="panel zone-vis" id="panel-vis"> <!-- phx-hook="DreamWorld" -->
-          <div style="text-align: center;">
-            <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
-            <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
-          </div>
-        </div>
-        <div class="panel zone-lyrics">
-          <div class="lyrics-wrapper">
-            <div class="lyric-text">Switch on the power line</div>
-            <div class="lyric-sub">> Remember to put on PROTECTION</div>
-          </div>
-          <Components.hud items={
-            [
-              {"FPS:", "60.0"},
-              {"TICK:", @tick},
-              {"MEM:", @mem <> "MB"},
-              {"NET:", "CONNECTED"}
-              ]
-            } />
-        </div>
-      </div>
-    </div>
+      </:console>
+      <:visual>
+        <Components.visual id={"panel-vis"} animation={@animation} />
+      </:visual>
+      <:lyrics>
+        <Components.lyrics
+          text={"Switch on the power line"}
+          sub={"Remember to put on PROTECTION"}
+        />
+      </:lyrics>
+      <:hud>
+        <Components.hud items={
+          [
+            {"FPS:", "60.0"},
+            {"TICK:", @tick},
+            {"MEM:", @mem <> "MB"},
+            {"NET:", "CONNECTED"}
+            ]
+          } />
+      </:hud>
+    </Components.app>
     """
   end
 
