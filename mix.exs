@@ -47,6 +47,8 @@ defmodule MortalDrinksElixir.MixProject do
   end
 
   defp aliases do
-    []
+    [
+      pre: ["esbuild.install --if-missing", "compile", "esbuild mord_ex"]
+    ]
   end
 end
