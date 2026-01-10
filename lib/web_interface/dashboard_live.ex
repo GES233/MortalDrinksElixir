@@ -6,21 +6,28 @@ defmodule WebInterface.DashboardLive do
   def render(assigns) do
     ~H"""
     <Components.app>
+      <!-- Left side -->
       <:code>
-        <Components.code id={"panel-source"}>
-          <%= Phoenix.HTML.raw(@code_snippet) %>
-        </Components.code>
+        <Components.panel header="// SOURCE_CODE">
+          <Components.code>
+            <%= Phoenix.HTML.raw(@code_snippet) %>
+          </Components.code>
+        </Components.panel>
       </:code>
       <:console>
+        <Components.panel header="// KERNEL_OUTPUT_BUFFER">
         <Components.log_entry logs={[
           {"> System boot sequence initiated...", :info},
           {"> Loading world assets... OK", :info},
           {"> Warning: Emotion engine offline.", :warn},
           {"> Conductor ready.", :info}
         ]}/><!-- Mock log add phx-update="stream" -->
+        </Components.panel>
       </:console>
+
+      <!-- Right side -->
       <:visual>
-        <Components.visual id={"panel-vis"} animation={@animation} />
+        <Components.visual animation={@animation} />
       </:visual>
       <:lyrics>
         <Components.lyrics

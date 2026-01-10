@@ -1,6 +1,8 @@
 defmodule WebInterface.Components do
   use Phoenix.Component
 
+  # === Scaffold ===
+
   slot :code
   slot :console
   slot :visual
@@ -13,14 +15,47 @@ defmodule WebInterface.Components do
         <%= render_slot(@code) %>
         <%= render_slot(@console) %>
       </div>
-      <div class="grid grid-rows-[1fr_80px] h-full overflow-hidden gap-3">
-        <%= render_slot(@visual) %>
-        <div class="panel flex flex-col relative zone-lyrics">
-        <%= render_slot(@lyrics) %>
-        <%= render_slot(@hud) %>
-        </div>
+      <div class="grid grid-rows-[1fr_100px] h-full overflow-hidden gap-3">
+        <.panel focused={true} center={true}>
+          <%= render_slot(@visual) %>
+        </.panel>
+          <div class="
+              border-phosphor-main flex flex-row relative border-t-[2px_solid_var(--phosphor-main)]
+              items-center text-center justify-between px-5 py-0 box-border w-full"
+            >
+            <%= render_slot(@lyrics) %>
+            <%= render_slot(@hud) %>
+          </div>
       </div>
     </div>
+    """
+  end
+
+  # if
+  # ture => border-phosphor-main
+  # false => border-???
+  attr :focused, :boolean, default: false
+  attr :center, :boolean, default: false
+  attr :header, :string, default: ""
+  slot :inner_block, required: true
+  def panel(assigns) do
+    ~H"""
+    <%= if not @center do %>
+      <div class={["border-2 border-solid flex flex-col relative bg-[rgba(0,0,0,0.2)]", !@focused && "border-panel-border", @focused && "border-phosphor-main"]}>
+        <%= if @header != "" do %>
+          <div class="px-2.5 py-1.5 text-[0.8rem] border-b-[1px_dashed_#333] tracking-[1px] shrink-0 uppercase font-code text-gray-500 bg-[#111]">
+            <%= @header %>
+          </div>
+        <% end %>
+        <div class="p-2.5 grow overflow-y-auto leading-normal text-sm">
+          <%= render_slot(@inner_block) %>
+        </div>
+      </div>
+    <% else %>
+      <div class="border-2 border-solid border-phosphor-main justify-center items-center overflow-hidden flex flex-col relative bg-[rgba(0,0,0,0.2)]">
+        <%= render_slot(@inner_block) %>
+      </div>
+    <% end %>
     """
   end
 
@@ -28,9 +63,7 @@ defmodule WebInterface.Components do
   slot :inner_block, required: true
   def code(assigns) do
     ~H"""
-    <div class="panel flex flex-col relative zone-code font-code" id={@id}>
-      <div class="panel-header">// SOURCE_CODE</div>
-      <div class="panel-content text-sm leading-snug font-code my-0" phx-look=".CodeLiveRenderer">
+      <div class="text-sm leading-snug font-code my-0" phx-look=".CodeLiveRenderer">
         <%= render_slot(@inner_block) %>
       </div>
       <script :type={Phoenix.LiveView.ColocatedHook} name=".CodeLiveRenderer">
@@ -38,15 +71,13 @@ defmodule WebInterface.Components do
           mounted() {}
         }
       </script>
-    </div>
     """
   end
 
-  attr :id, :string
   attr :animation, :string
   def visual(assigns) do
     ~H"""
-    <div class="panel flex flex-col relative zone-vis justify-center items-center overflow-hidden border-phosphor-main font-anime" id={@id}>
+    <div class="font-anime">
       <div style="text-align: center;">
         <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
         <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
@@ -59,9 +90,7 @@ defmodule WebInterface.Components do
   # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
     ~H"""
-    <div class="panel flex flex-col relative zone-logs font-lyrics" id="panel-logs">
-      <div class="panel-header">// KERNEL_OUTPUT_BUFFER</div>
-      <div class="panel-content" id="log-container">
+      <div class="p-2.5 grow overflow-y-auto leading-normal font-lyrics" id="log-container">
       <%= for item <- @logs do %>
         <div class="font-lyrics text-xs text-gray-400">
           <%= case item do %>
@@ -93,7 +122,6 @@ defmodule WebInterface.Components do
           </div>
         <% end %>
       </div>
-    </div>
     """
   end
 
@@ -111,7 +139,7 @@ defmodule WebInterface.Components do
   attr :items, :list, required: true
   def hud(assigns) do
     ~H"""
-    <div class="hud-wrapper font-anime text-right grid pl-4 text-[10px]">
+    <div class="grid-cols-[auto_auto] gap-[2px 10px] leading-[1.2] border-l-[1px_solid_#333] font-anime text-right grid pl-4 text-[10px]">
       <%= for {k, v} <- @items do %>
         <span class="text-gray-600">{k}</span>
         <span class="text-phosphor-main">{v}</span>
