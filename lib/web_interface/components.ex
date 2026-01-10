@@ -8,14 +8,14 @@ defmodule WebInterface.Components do
   slot :hud
   def app(assigns) do
     ~H"""
-    <div class="layout-grid">
-      <div class="col-left">
+    <div class="grid grid-cols-[5fr_7fr] h-screen p-3 box-border gap-3">
+      <div class="gap-3 grid grid-rows-[1fr_1fr] h-full overflow-hidden">
         <%= render_slot(@code) %>
         <%= render_slot(@console) %>
       </div>
-      <div class="col-right">
+      <div class="grid grid-rows-[1fr_80px] h-full overflow-hidden gap-3">
         <%= render_slot(@visual) %>
-        <div class="panel zone-lyrics">
+        <div class="panel flex flex-col relative zone-lyrics">
         <%= render_slot(@lyrics) %>
         <%= render_slot(@hud) %>
         </div>
@@ -28,7 +28,7 @@ defmodule WebInterface.Components do
   slot :inner_block, required: true
   def code(assigns) do
     ~H"""
-    <div class="panel zone-code font-code" id={@id}>
+    <div class="panel flex flex-col relative zone-code font-code" id={@id}>
       <div class="panel-header">// SOURCE_CODE</div>
       <div class="panel-content text-sm leading-snug font-code my-0" phx-look=".CodeLiveRenderer">
         <%= render_slot(@inner_block) %>
@@ -46,7 +46,7 @@ defmodule WebInterface.Components do
   attr :animation, :string
   def visual(assigns) do
     ~H"""
-    <div class="panel zone-vis font-anime" id={@id}>
+    <div class="panel flex flex-col relative zone-vis justify-center items-center overflow-hidden border-phosphor-main font-anime" id={@id}>
       <div style="text-align: center;">
         <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
         <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
@@ -59,7 +59,7 @@ defmodule WebInterface.Components do
   # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
     ~H"""
-    <div class="panel zone-logs font-lyrics" id="panel-logs">
+    <div class="panel flex flex-col relative zone-logs font-lyrics" id="panel-logs">
       <div class="panel-header">// KERNEL_OUTPUT_BUFFER</div>
       <div class="panel-content" id="log-container">
       <%= for item <- @logs do %>

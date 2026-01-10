@@ -22,49 +22,9 @@ defmodule WebInterface.Scaffold do
             --panel-active: 2px solid #00ff41;
           }
 
-          body {
-            font-family: 'Fira Code', 'Consolas', monospace;
-            margin: 0;
-            height: 100vh;
-            overflow: hidden;
-          }
-
-          /* pre, code {
-            font-family: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
-            font-size: 14px; line-height: 1.4;
-          } */
-
-          .layout-grid {
-            display: grid;
-            grid-template-columns: 5fr 7fr;
-            gap: 12px;
-            height: 100vh;
-            padding: 12px;
-            box-sizing: border-box;
-          }
-
-          .col-left {
-            display: grid;
-            grid-template-rows: 1fr 1fr;
-            gap: 12px;
-            height: 100%;
-            overflow: hidden;
-          }
-
-          .col-right {
-            display: grid;
-            grid-template-rows: 1fr 80px;
-            gap: 12px;
-            height: 100%;
-            overflow: hidden;
-          }
-
           .panel {
             border: var(--panel-border);
             background: rgba(0, 20, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            position: relative;
           }
 
           .panel-header {
@@ -89,9 +49,6 @@ defmodule WebInterface.Scaffold do
 
           .zone-vis {
             border: var(--panel-active);
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
           }
 
           .zone-lyrics {
