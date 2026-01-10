@@ -77,12 +77,10 @@ defmodule WebInterface.Components do
   attr :animation, :string
   def visual(assigns) do
     ~H"""
-    <div class="font-anime">
-      <div style="text-align: center;">
-        <h1 style="font-size: 3rem; margin: 0;"><%= @animation %></h1>
-        <p style="opacity: 0.6;">RENDERING VIEWPORT</p>
+      <div class="font-anime text-center">
+      <h1 class="text-5xl"><%= @animation %></h1>
+      <p class="opacity-60 mt-3">RENDERING VIEWPORT</p>
       </div>
-    </div>
     """
   end
 
