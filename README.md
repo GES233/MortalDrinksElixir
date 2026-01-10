@@ -97,3 +97,15 @@ At the beginning, I wanted to use a terminal UI, but I am not good at TUI or ASC
 That origin idea was naïve. But I'm motivated.
 
 So here's the reason why I use phoenix without `mix phx.new`.
+
+## Roadmap
+
+- UI
+  - Code Snippet
+  - Code Snippet with animation
+  - Animation present(inspired from js1k's games)
+  - Lyrics update
+- logic inference engine(miniKanren)
+- OTP application designing
+  - Web part
+  - Simulation part
