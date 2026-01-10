@@ -1,4 +1,4 @@
-defmodule MortalDrinksElixir.WebInterface.Components do
+defmodule WebInterface.Components do
   use Phoenix.Component
 
   slot :inner_block, required: true

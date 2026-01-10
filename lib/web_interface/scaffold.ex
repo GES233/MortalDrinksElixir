@@ -1,4 +1,4 @@
-defmodule MortalDrinksElixir.WebInterface.Scaffold do
+defmodule WebInterface.Scaffold do
   use Phoenix.LiveView, layout: {__MODULE__, :live}
 
   def render("live.html", assigns) do

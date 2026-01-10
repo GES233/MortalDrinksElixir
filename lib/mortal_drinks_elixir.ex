@@ -15,9 +15,11 @@ defmodule MortalDrinksElixir do
     )
 
     children = [
-      {Phoenix.PubSub, name: MortalDrinksElixir.PubSub},
       MortalDrinksElixir.Conductor,
-      MortalDrinksElixir.WebInterface.Endpoint
+      # Communicate
+      {Phoenix.PubSub, name: MortalDrinksElixir.PubSub},
+      # WebUI
+      WebInterface.Endpoint,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

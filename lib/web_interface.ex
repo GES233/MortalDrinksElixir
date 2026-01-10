@@ -1,4 +1,4 @@
-defmodule MortalDrinksElixir.WebInterface do
+defmodule WebInterface do
   @moduledoc """
   Embedd phoenix WebUI with only several modules here.
   """
@@ -12,12 +12,12 @@ defmodule MortalDrinksElixir.WebInterface do
       plug(:fetch_session)
       plug(:protect_from_forgery)
       plug(:put_secure_browser_headers)
-      plug(:put_root_layout, {MortalDrinksElixir.WebInterface.Scaffold, :live})
+      plug(:put_root_layout, {WebInterface.Scaffold, :live})
     end
 
     scope "/" do
       pipe_through(:browser)
-      live("/", MortalDrinksElixir.WebInterface.DashboardLive)
+      live("/", WebInterface.DashboardLive)
     end
   end
 

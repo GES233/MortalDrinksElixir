@@ -1,7 +1,7 @@
-defmodule MortalDrinksElixir.WebInterface.DashboardLive do
+defmodule WebInterface.DashboardLive do
   use Phoenix.LiveView
 
-  alias MortalDrinksElixir.WebInterface.Components
+  alias WebInterface.Components
 
   def render(assigns) do
     ~H"""
