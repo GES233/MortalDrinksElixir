@@ -35,8 +35,7 @@ mix deps.compile
 # Compile
 mix compile
 # Assets management
-mix esbuild.install
-mix esbuild mord_ex
+mix pre  # see `aliases` in mix.exs
 ```
 
 ### Run
