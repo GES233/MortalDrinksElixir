@@ -4,15 +4,18 @@
 @source "../js";
 @source "../../../web_interface";
 
+/* Custome color and fonts */
+
 @theme {
   --color-phosphor-main: #00ff41;
   --color-phosphor-shadow: #004411;
   --color-terminal-black: #050505;
   --color-panel-border: #333;
-  --font-code: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
   --font-lyrics: "Fira Code", Consolas, monospace;
   --font-anime: "Fira Code", Consolas, monospace;
 }
+
+/* Phoenix LiveView */
 
 @custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
 @custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
@@ -21,4 +24,131 @@
 [data-phx-session],
 [data-phx-teleported-src] {
   display: contents;
+}
+
+/* Code */
+@theme {
+  --font-code: "CaskaydiaCove Nerd Font Mono", Consolas, "Courier New", monospace;
+  --color-code-base: #f8f8f2;
+  --color-code-comment: #75715e;
+  --color-code-string: #e6db74;
+  --color-code-literal: #ae81ff;
+  --color-code-error: #960050;
+  --color-code-red: #f92672;
+  --color-code-keyword: #66d9ef;
+}
+
+.highlight {
+  @apply text-code-base bg-transparent!;
+
+  .unselectable { @apply select-none }
+
+  /* keyword */
+
+  .k,   /* :keyword */
+  .kc,  /* :keyword_constant */
+  .kd,  /* :keyword_declaration */
+  .kp,  /* :keyword_pseudo */
+  .kr,  /* :keyword_reserved */
+  .kt   /* :keyword_type */
+  { @apply text-code-keyword }
+  .k, .kd { @apply font-bold }
+  /* Used for #f/#u/#s/#t in miniKanren */
+  .kc { @apply bg-[#b455c3] rounded-sm px-1 py-0 font-bold }
+
+  /* name */
+
+  .bp,  /* :name_builtin_pseudo */
+  .n,   /* :name */
+  .nb,  /* :name_builtin */
+  .ni,  /* :name_entity */
+  .nl,  /* :name_label */
+  .nn,  /* :name_namespace */
+  .nv,  /* :name_variable */
+  .p,   /* :punctuation */
+  .py,  /* :name_property */
+  .vc,  /* :name_variable_class */
+  .vg,  /* :name_variable_global */  
+  .vi,  /* :name_variable_instance */
+  .vm   /* :name_variable_magic */
+  { @apply text-code-base }
+
+  /* name(OOP) */
+
+  .na {color: #a6e22e; } /* :name_attribute */
+  .nc {color: #a6e22e; } /* :name_class */
+  .nd {color: #a6e22e; } /* :name_decorator */
+  .ne {color: #a6e22e; } /* :name_exception */
+  .nf {color: #a6e22e; } /* :name_function */
+  .no {color: #66d9ef; } /* :name_constant */
+  .nt {color: #f92672; } /* :name_tag */
+  .nx {color: #a6e22e; } /* :name_other */
+
+  .nt   /* :name_tag */
+  { @apply text-code-red }
+
+  /* comment */
+
+  .c,   /* :comment */
+  .c1,  /* :comment_single */
+  .ch,  /* :comment_hashbang */
+  .cm,  /* :comment_multiline */
+  .cp,  /* :comment_preproc */
+  .cpf, /* :comment_preproc_file */
+  .cs   /* :comment_special */
+  { @apply text-code-comment }
+
+  /* string */
+  .s,   /* :string */
+  .s1,  /* :string_single */
+  .s2,  /* :string_double */
+  .sa,  /* :string_affix */
+  .sb,  /* :string_backtick */
+  .sc,  /* :string_char */
+  .sd,  /* :string_doc */
+  .sh,  /* :string_heredoc */
+  .si,  /* :string_interpol */
+  .sr,  /* :string_regex */
+  .ss,  /* :string_symbol */
+  .sx,  /* :string_other */
+  .sx   /* :string_sigil */
+  { @apply text-code-string }
+
+  .se   /* :string_escape */
+  { @apply text-code-literal }
+
+  /* numbers */
+  .m,   /* :number */
+  .mb,  /* :number_bin */
+  .mf,  /* :number_float */
+  .mh,  /* :number_hex */
+  .mi,  /* :number_integer */
+  .mo,  /* :number_oct */
+  .il   /* :number_integer_long */
+  { @apply text-code-literal }
+
+  /* operators */
+  .o,  /* :operator */
+  .ow  /* :operator_word */
+  { @apply text-code-red }
+
+  /* error */
+  .er   /* :error */
+  { @apply text-white bg-code-error }
+
+  /* generic */
+  .gd { @apply text-code-red } /* :generic_deleted */
+  .ge { @apply italic } /* :generic_emph */
+  .gi {color: #a6e22e; } /* :generic_inserted */
+  .gs { @apply font-bold } /* :generic_strong */
+  .gu {color: #75715e; } /* :generic_subheading */
+
+  .dl {color: #e6db74; } /* :string_delimiter */
+  .fm {color: #a6e22e; } /* :name_function_magic */
+
+  .l,  /* :literal */
+  .ld  /* :literal_date */
+  {color: #ae81ff; }
+
+  .kn {color: #f92672; } /* :keyword_namespace */
 }

@@ -37,9 +37,9 @@ config :mord_ex, WebInterface.Endpoint,
   ],
   live_reload: [
     patterns: [
-      ~r{assets/.*(js|css|png|jpeg|jpg|gif)$},
-      ~r{lib/mortal_drinks_elixir/.*(ex|exs)$},
-      ~r{lib/web_interface/.*(ex|exs)$}
+      ~r{lib/web_interface/assets/.*(js|css|png|jpeg|jpg|gif)$},
+      ~r{lib/.\*/.*(ex|exs)$},
+      ~r{lib/web_interface/.\*/.*(ex|exs)$}
     ]
   ],
   watchers: [

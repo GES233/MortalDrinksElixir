@@ -8,6 +8,10 @@ An Elixir implementation of `GodDrinksJava` from Mili's `World.execute(me);`.
     * < https://ges233.github.io/2024/06/World-execute-me-lyrics-analyse/ >  
 * PVs (Music Videos) in other languages and formats created since 2019  
 
+### Screenshot
+
+![Work-in-progress](assets/screenshot-wip.png)
+
 ## Usage  
 
 ### Installation  

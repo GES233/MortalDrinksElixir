@@ -74,7 +74,7 @@ defmodule MakeupKanren do
   # 4. API Implementation
   ###################################################################
 
-@impl Makeup.Lexer
+  @impl Makeup.Lexer
   def lex(text, opts \\ []) do
     match_groups? = Keyword.get(opts, :match_groups, true)
 
@@ -127,11 +127,11 @@ defmodule MakeupKanren do
       ~c"fresh" -> {:keyword, attrs, text}
       ~c"conde" -> {:keyword, attrs, text}
       ~c"condᵉ" -> {:keyword, attrs, text}
-      ~c"conda" -> {:keyword, attrs, text} # Soft cut (扩展)
+      ~c"conda" -> {:keyword, attrs, text} # Soft cut (ext)
       ~c"condᵃ" -> {:keyword, attrs, text}
-      ~c"condu" -> {:keyword, attrs, text} # Committed choice (扩展)
+      ~c"condu" -> {:keyword, attrs, text} # Committed choice (ext)
       ~c"condᵘ" -> {:keyword, attrs, text}
-      ~c"defrel" -> {:keyword_declaration, attrs, text} # 定义关系
+      ~c"defrel" -> {:keyword_declaration, attrs, text} # Definate relationship
       ~c"project" -> {:keyword, attrs, text}
 
       # --- Operator ---
@@ -154,10 +154,10 @@ defmodule MakeupKanren do
       ~c"else" -> {:keyword, attrs, text}
 
       # --- Constants ---
-      ~c"#t" -> {:string_symbol, attrs, text}
-      ~c"#f" -> {:string_symbol, attrs, text}
-      ~c"#u" -> {:string_symbol, attrs, text} # fail in some impls
-      ~c"#s" -> {:string_symbol, attrs, text} # succeed in some impls
+      ~c"#t" -> {:keyword_constant, attrs, text}
+      ~c"#f" -> {:keyword_constant, attrs, text}
+      ~c"#u" -> {:keyword_constant, attrs, text} # fail in some impls
+      ~c"#s" -> {:keyword_constant, attrs, text} # succeed in some impls
 
       _ -> {:name, attrs, text}
     end

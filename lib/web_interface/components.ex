@@ -1,8 +1,6 @@
 defmodule WebInterface.Components do
   use Phoenix.Component
 
-  # === Scaffold ===
-
   slot :code
   slot :console
   slot :visual
@@ -10,17 +8,15 @@ defmodule WebInterface.Components do
   slot :hud
   def app(assigns) do
     ~H"""
-    <div class="grid grid-cols-[5fr_7fr] h-screen p-3 box-border gap-3">
+    <div class="grid grid-cols-[5fr_7fr] h-screen p-3 box-border gap-3 text-lyrics">
       <div class="gap-3 grid grid-rows-[1fr_1fr] h-full overflow-hidden">
         <%= render_slot(@code) %>
         <%= render_slot(@console) %>
       </div>
       <div class="grid grid-rows-[1fr_100px] h-full overflow-hidden gap-3">
-        <.panel focused={true} center={true}>
           <%= render_slot(@visual) %>
-        </.panel>
           <div class="
-              border-phosphor-main flex flex-row relative border-t-[2px_solid_var(--phosphor-main)]
+              border-phosphor-main flex flex-row relative border-t-2 border-solid
               items-center text-center justify-between px-5 py-0 box-border w-full"
             >
             <%= render_slot(@lyrics) %>
@@ -41,9 +37,15 @@ defmodule WebInterface.Components do
   def panel(assigns) do
     ~H"""
     <%= if not @center do %>
-      <div class={["border-2 border-solid flex flex-col relative bg-[rgba(0,0,0,0.2)]", !@focused && "border-panel-border", @focused && "border-phosphor-main"]}>
+      <div class={[
+          "border-2 border-solid flex flex-col relative bg-[rgba(0,0,0,0.2)]",
+          !@focused && "border-panel-border", @focused && "border-phosphor-main"
+        ]}>
         <%= if @header != "" do %>
-          <div class="px-2.5 py-1.5 text-[0.8rem] border-b-[1px_dashed_#333] tracking-[1px] shrink-0 uppercase font-code text-gray-500 bg-[#111]">
+          <div class="
+              px-2.5 py-1.5 text-[0.8rem] border-b-2 border-dashed border-panel-border
+              tracking-[1px] shrink-0 uppercase font-code text-gray-500 bg-[#111]"
+            >
             <%= @header %>
           </div>
         <% end %>
@@ -52,7 +54,11 @@ defmodule WebInterface.Components do
         </div>
       </div>
     <% else %>
-      <div class="border-2 border-solid border-phosphor-main justify-center items-center overflow-hidden flex flex-col relative bg-[rgba(0,0,0,0.2)]">
+      <div class={[
+          "border-2 border-solid justify-center items-center overflow-hidden
+          flex flex-col relative bg-[rgba(0,0,0,0.2)]",
+          !@focused && "border-panel-border", @focused && "border-phosphor-main"
+        ]}>
         <%= render_slot(@inner_block) %>
       </div>
     <% end %>
@@ -78,38 +84,38 @@ defmodule WebInterface.Components do
   # multi lines log(e.g. error stacktrace)
   def log_entry(assigns) do
     ~H"""
-      <div class="p-2.5 grow overflow-y-auto leading-normal font-lyrics" id="log-container">
-      <%= for item <- @logs do %>
-        <div class="font-lyrics text-xs text-gray-400">
-          <%= case item do %>
-            <% {content, nil} -> %>
-              <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
-                <%= content %>
-              </div>
-            <% {content, :info} -> %>
-              <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid text-gray-400">
-                <%= content %>
-              </div>
-            <% {content, :debug} -> %>
-              <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid text-green-500">
-                <%= content %>
-              </div>
-            <% {content, :warn} -> %>
-              <div class="mb-1 pl-1 text-yellow-300 border-l-2 border-solid border-amber-700">
-                <%= content %>
-              </div>
-            <% {content, :error} -> %>
-              <div class="mb-1 pl-1 text-red-600 border-l-2 border-solid border-red-800">
-                <%= content %>
-              </div>
-            <% content -> %>
-              <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
-                <%= content %>
-              </div>
-          <% end %>
-          </div>
+    <div class="p-2.5 grow overflow-y-auto leading-normal font-lyrics" id="log-container">
+    <%= for item <- @logs do %>
+      <div class="font-lyrics text-xs text-gray-400">
+        <%= case item do %>
+          <% {content, nil} -> %>
+            <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
+              <%= content %>
+            </div>
+          <% {content, :info} -> %>
+            <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid">
+              <%= content %>
+            </div>
+          <% {content, :debug} -> %>
+            <div class="mb-1 pl-1 border-sky-900 border-l-2 border-solid text-green-500">
+              <%= content %>
+            </div>
+          <% {content, :warn} -> %>
+            <div class="mb-1 pl-1 text-yellow-300 border-l-2 border-solid border-amber-700">
+              <%= content %>
+            </div>
+          <% {content, :error} -> %>
+            <div class="mb-1 pl-1 text-red-600 border-l-2 border-solid border-red-800">
+              <%= content %>
+            </div>
+          <% content -> %>
+            <div class="mb-1 pl-1 border-l-2 border-solid border-gray-500">
+              <%= content %>
+            </div>
         <% end %>
-      </div>
+        </div>
+      <% end %>
+    </div>
     """
   end
 

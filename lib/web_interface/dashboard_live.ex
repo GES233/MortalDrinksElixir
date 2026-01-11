@@ -16,18 +16,15 @@ defmodule WebInterface.DashboardLive do
       </:code>
       <:console>
         <Components.panel header="// KERNEL_OUTPUT_BUFFER">
-        <Components.log_entry logs={[
-          {"> System boot sequence initiated...", :info},
-          {"> Loading world assets... OK", :info},
-          {"> Warning: Emotion engine offline.", :warn},
-          {"> Conductor ready.", :info}
-        ]}/><!-- Mock log add phx-update="stream" -->
+        <Components.log_entry logs={@logs}/><!-- Mock log add phx-update="stream" -->
         </Components.panel>
       </:console>
 
       <!-- Right side -->
       <:visual>
-        <Components.visual animation={@animation} />
+        <Components.panel focused={true} center={true}>
+          <Components.visual animation={@animation} />
+        </Components.panel>
       </:visual>
       <:lyrics>
         <Components.lyrics
@@ -75,7 +72,13 @@ defmodule WebInterface.DashboardLive do
        mem:
          (:erlang.memory(:total) / 1000_000)
          |> Float.ceil(2)
-         |> :erlang.float_to_binary([:short])
+         |> :erlang.float_to_binary([:short]),
+       logs: [
+         {"> System boot sequence initiated...", :info},
+         {"> Loading world assets... OK", :info},
+         {"> Warning: Emotion engine offline.", :warn},
+         {"> Conductor ready.", :info}
+       ]
      )}
   end
 
@@ -110,12 +113,14 @@ defmodule WebInterface.DashboardLive do
     u_str = inspect_term(u)
     v_str = inspect_term(v)
 
-    {msg, color_class} = case status do
-      :ok ->
-        {"Unifying #{u_str} == #{v_str} ... OK", "text-green-400 border-green-800"}
-      :fail ->
-        {"Unifying #{u_str} == #{v_str} ... CONTRADICTION", "text-red-500 border-red-800"}
-    end
+    {msg, color_class} =
+      case status do
+        :ok ->
+          {"Unifying #{u_str} == #{v_str} ... OK", "text-green-400 border-green-800"}
+
+        :fail ->
+          {"Unifying #{u_str} == #{v_str} ... CONTRADICTION", "text-red-500 border-red-800"}
+      end
 
     # 构建带样式的日志对象
     log_entry = %{
@@ -138,12 +143,15 @@ defmodule WebInterface.DashboardLive do
       # 模拟歌词: "If I am a set of points" -> 尝试统一属性
       L.run(fn _q ->
         L.conj(
-          L.eq(:me, :set_of_points), # 成功
+          # 成功
+          L.eq(:me, :set_of_points),
           L.call_fresh(fn heart ->
-             L.conj(
-               L.eq(heart, :emotional_core), # 成功
-               L.eq(heart, :void)            # 失败！产生矛盾
-             )
+            L.conj(
+              # 成功
+              L.eq(heart, :emotional_core),
+              # 失败！产生矛盾
+              L.eq(heart, :void)
+            )
           end)
         )
       end)
