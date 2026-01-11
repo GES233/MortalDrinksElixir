@@ -83,7 +83,7 @@ defmodule WebInterface.DashboardLive do
   end
 
   def handle_info({:tick, count}, socket) do
-    frame = rem(count, 8)
+    frame = rem(count, 16) |> div(2)
 
     emoji =
       case frame do
