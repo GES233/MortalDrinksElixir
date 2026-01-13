@@ -9,25 +9,25 @@ defmodule WebInterface.DashboardLive do
       <!-- Left side -->
       <:code>
         <Components.panel header="// SOURCE_CODE">
-          <Components.code>
+          <Components.Text.code>
             <%= Phoenix.HTML.raw(@code_snippet) %>
-          </Components.code>
+          </Components.Text.code>
         </Components.panel>
       </:code>
       <:console>
         <Components.panel header="// KERNEL_OUTPUT_BUFFER">
-        <Components.log_entry logs={@logs}/><!-- Mock log add phx-update="stream" -->
+          <Components.Text.log_entry logs={@logs}/><!-- Mock log add phx-update="stream" -->
         </Components.panel>
       </:console>
 
       <!-- Right side -->
       <:visual>
         <Components.panel focused={true} center={true}>
-          <Components.visual animation={@animation} />
+          <Components.Visual.visual animation={@animation} />
         </Components.panel>
       </:visual>
       <:lyrics>
-        <Components.lyrics
+        <Components.Text.lyrics
           text={"Switch on the power line"}
           sub={"Remember to put on PROTECTION"}
         />
@@ -107,6 +107,8 @@ defmodule WebInterface.DashboardLive do
          |> :erlang.float_to_binary([:short])
      )}
   end
+
+  # === Attampt to use microKanren ===
 
   def handle_info({:logic_trace, status, u, v}, socket) do
     # 格式化变量显示

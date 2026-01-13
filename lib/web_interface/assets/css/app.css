@@ -36,6 +36,7 @@
   --color-code-error: #960050;
   --color-code-red: #f92672;
   --color-code-keyword: #66d9ef;
+  --color-code-oop-conc: #a6e22e;
 }
 
 .highlight {
@@ -50,8 +51,10 @@
   .kd,  /* :keyword_declaration */
   .kp,  /* :keyword_pseudo */
   .kr,  /* :keyword_reserved */
-  .kt   /* :keyword_type */
+  .kt,  /* :keyword_type */
+  .no   /* :name_constant */
   { @apply text-code-keyword }
+
   .k, .kd { @apply font-bold }
   /* Used for #f/#u/#s/#t in miniKanren */
   .kc { @apply bg-[#b455c3] rounded-sm px-1 py-0 font-bold }
@@ -75,16 +78,16 @@
 
   /* name(OOP) */
 
-  .na {color: #a6e22e; } /* :name_attribute */
-  .nc {color: #a6e22e; } /* :name_class */
-  .nd {color: #a6e22e; } /* :name_decorator */
-  .ne {color: #a6e22e; } /* :name_exception */
-  .nf {color: #a6e22e; } /* :name_function */
-  .no {color: #66d9ef; } /* :name_constant */
-  .nt {color: #f92672; } /* :name_tag */
-  .nx {color: #a6e22e; } /* :name_other */
+  .na,  /* :name_attribute */
+  .nc,  /* :name_class */
+  .nd,  /* :name_decorator */
+  .ne,  /* :name_exception */
+  .nf,  /* :name_function */
+  .nx   /* :name_other */
+  { @apply text-code-oop-conc }
 
-  .nt   /* :name_tag */
+  .nt,  /* :name_tag */
+  .kn   /* :keyword_namespace */
   { @apply text-code-red }
 
   /* comment */
@@ -111,7 +114,8 @@
   .sr,  /* :string_regex */
   .ss,  /* :string_symbol */
   .sx,  /* :string_other */
-  .sx   /* :string_sigil */
+  .sx,  /* :string_sigil */
+  .dl   /* :string_delimiter */
   { @apply text-code-string }
 
   .se   /* :string_escape */
@@ -143,12 +147,9 @@
   .gs { @apply font-bold } /* :generic_strong */
   .gu {color: #75715e; } /* :generic_subheading */
 
-  .dl {color: #e6db74; } /* :string_delimiter */
   .fm {color: #a6e22e; } /* :name_function_magic */
 
   .l,  /* :literal */
   .ld  /* :literal_date */
   {color: #ae81ff; }
-
-  .kn {color: #f92672; } /* :keyword_namespace */
 }
