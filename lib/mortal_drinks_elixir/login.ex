@@ -80,6 +80,8 @@ defmodule MortalDrinksElixir.Logic do
     end
   end
 
+  # Where's disj?
+
   # call_fresh 负责引入逻辑变量
   def call_fresh(f) do
     fn %State{counter: c} = s ->
