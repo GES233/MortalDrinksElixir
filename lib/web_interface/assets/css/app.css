@@ -10,6 +10,7 @@
   --color-phosphor-main: #00ff41;
   --color-phosphor-shadow: #004411;
   --color-terminal-black: #050505;
+  --color-panel-header: #111;
   --color-panel-border: #333;
   --font-lyrics: "Fira Code", Consolas, monospace;
   --font-anime: "Fira Code", Consolas, monospace;
@@ -37,6 +38,7 @@
   --color-code-red: #f92672;
   --color-code-keyword: #66d9ef;
   --color-code-oop-conc: #a6e22e;
+  --color-code-gray: #75715e;
 }
 
 .highlight {
@@ -54,7 +56,6 @@
   .kt,  /* :keyword_type */
   .no   /* :name_constant */
   { @apply text-code-keyword }
-
   .k, .kd { @apply font-bold }
   /* Used for #f/#u/#s/#t in miniKanren */
   .kc { @apply bg-[#b455c3] rounded-sm px-1 py-0 font-bold }
@@ -143,13 +144,14 @@
   /* generic */
   .gd { @apply text-code-red } /* :generic_deleted */
   .ge { @apply italic } /* :generic_emph */
-  .gi {color: #a6e22e; } /* :generic_inserted */
   .gs { @apply font-bold } /* :generic_strong */
-  .gu {color: #75715e; } /* :generic_subheading */
+  .gu { @apply text-code-gray } /* :generic_subheading */
 
-  .fm {color: #a6e22e; } /* :name_function_magic */
+  .gi,  /* :generic_inserted */
+  .fm  /* :name_function_magic */
+  { @apply text-code-oop-conc }
 
   .l,  /* :literal */
   .ld  /* :literal_date */
-  {color: #ae81ff; }
+  { @apply text-code-literal }
 }

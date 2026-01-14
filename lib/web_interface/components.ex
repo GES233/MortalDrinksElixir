@@ -41,7 +41,7 @@ defmodule WebInterface.Components do
         <%= if @header != "" do %>
           <div class="
               px-2.5 py-1.5 text-[0.8rem] border-b-2 border-dashed border-panel-border
-              tracking-[1px] shrink-0 uppercase font-code text-gray-500 bg-[#111]"
+              tracking-[1px] shrink-0 uppercase font-code text-gray-500 bg-panel-header"
             >
             <%= @header %>
           </div>
@@ -65,7 +65,7 @@ defmodule WebInterface.Components do
   attr :items, :list, required: true
   def hud(assigns) do
     ~H"""
-    <div class="grid-cols-[auto_auto] gap-[2px 10px] leading-[1.2] border-l-[1px_solid_#333] font-anime text-right grid pl-4 text-[10px]">
+    <div class="grid-cols-[auto_auto] gap-[2px 10px] leading-[1.2] border-l-[1px_solid] border-panel-border font-anime text-right grid pl-4 text-[10px]">
       <%= for {k, v} <- @items do %>
         <span class="text-gray-600">{k}</span>
         <span class="text-phosphor-main">{v}</span>

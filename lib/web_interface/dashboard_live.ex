@@ -1,6 +1,5 @@
 defmodule WebInterface.DashboardLive do
   use Phoenix.LiveView
-
   alias WebInterface.Components
 
   def render(assigns) do

@@ -20,7 +20,7 @@ defmodule MortalDrinksElixir.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :wx, :observer, :runtime_tools],
       mod: {MortalDrinksElixir, []}
     ]
   end
