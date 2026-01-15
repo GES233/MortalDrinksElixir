@@ -70,6 +70,9 @@ defmodule WebInterface.Components do
         <span class="text-gray-600">{k}</span>
         <span class="text-phosphor-main">{v}</span>
       <% end %>
+      <!-- Padding to align -->
+      <span class="text-gray-600">----</span>
+      <span class="text-gray-600">----------</span>
       <div class="contents text-phosphor-shadow mt-1 opacity-50 col-span-2">
         0x4F 0x4B 0x00
       </div>

@@ -22,7 +22,7 @@ defmodule WebInterface.DashboardLive do
       <!-- Right side -->
       <:visual>
         <Components.panel focused={true} center={true}>
-          <Components.Visual.visual animation={@animation} />
+          <Components.Visual.visual />
         </Components.panel>
       </:visual>
       <:lyrics>
@@ -35,7 +35,7 @@ defmodule WebInterface.DashboardLive do
         <Components.hud items={
           [
             {"FPS:", "60.0"},
-            {"TICK:", @tick},
+            {"TICK:", @animation},
             {"MEM:", @mem <> "MB"},
             {"NET:", "CONNECTED"}
             ]
@@ -59,7 +59,7 @@ defmodule WebInterface.DashboardLive do
           (appendo d s res)))))
 
     (run* (q) (appendo '(a b) '(c d) q))
-    #f
+    #u
     """
 
     {:ok,
@@ -106,62 +106,4 @@ defmodule WebInterface.DashboardLive do
          |> :erlang.float_to_binary([:short])
      )}
   end
-
-  # === Attampt to use microKanren ===
-
-  # def handle_info({:logic_trace, status, u, v}, socket) do
-  #   # 格式化变量显示
-  #   u_str = inspect_term(u)
-  #   v_str = inspect_term(v)
-
-  #   {msg, color_class} =
-  #     case status do
-  #       :ok ->
-  #         {"Unifying #{u_str} == #{v_str} ... OK", "text-green-400 border-green-800"}
-
-  #       :fail ->
-  #         {"Unifying #{u_str} == #{v_str} ... CONTRADICTION", "text-red-500 border-red-800"}
-  #     end
-
-  #   # 构建带样式的日志对象
-  #   log_entry = %{
-  #     id: System.unique_integer([:positive]),
-  #     msg: msg,
-  #     class: "font-mono text-xs border-l-2 pl-2 mb-1 #{color_class}"
-  #   }
-
-  #   # 只保留最近 15 条，制造滚屏效果
-  #   new_logs = [log_entry | socket.assigns.logs] |> Enum.take(15)
-
-  #   {:noreply, assign(socket, logs: new_logs)}
-  # end
-
-  # # 一个简单的测试剧本
-  # def handle_info(:start_thinking, socket) do
-  #   alias MortalDrinksElixir.Logic, as: L
-
-  #   Task.start(fn ->
-  #     # 模拟歌词: "If I am a set of points" -> 尝试统一属性
-  #     L.run(fn _q ->
-  #       L.conj(
-  #         # 成功
-  #         L.eq(:me, :set_of_points),
-  #         L.call_fresh(fn heart ->
-  #           L.conj(
-  #             # 成功
-  #             L.eq(heart, :emotional_core),
-  #             # 失败！产生矛盾
-  #             L.eq(heart, :void)
-  #           )
-  #         end)
-  #       )
-  #     end)
-  #   end)
-
-  #   {:noreply, socket}
-  # end
-
-  # defp inspect_term(%MortalDrinksElixir.Logic.Var{id: id}), do: "?var_#{id}"
-  # defp inspect_term(atom) when is_atom(atom), do: ":#{atom}"
-  # defp inspect_term(other), do: inspect(other)
 end

@@ -4,7 +4,7 @@ defmodule WebInterface.Scaffold do
   def render("live.html", assigns) do
     ~H"""
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
         <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
         <title>System Monitor</title>
