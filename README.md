@@ -99,7 +99,7 @@ At the beginning, I wanted to use a terminal UI, but I am not good at TUI or ASC
 
 That origin idea was naïve. But I'm motivated.
 
-So here's the reason why I use phoenix without `mix phx.new`.
+So here's the reason why I use phoenix but without `mix phx.new`'s scaffold.
 
 ## Roadmap
 
