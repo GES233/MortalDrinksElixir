@@ -106,9 +106,14 @@ So here's the reason why I use phoenix without `mix phx.new`.
 - UI
   - Code Snippet
   - Code Snippet with animation
-  - Animation present(inspired from js1k's games)
+  - Animation renderer
+    - JS1k Like(size & style)
+    - 0-dependencies
   - Lyrics update
 - logic inference engine(miniKanren)
+- relation code writing
+  - basic part
+  - feeling(happiness, painful ...) (cascade emotion mechanism)
 - OTP application designing
   - Web part
   - Simulation part

@@ -25,7 +25,4 @@ defmodule WebInterface.Components.Visual do
       </div>
     """
   end
-
-  # 用于实现具体的效果
-  # 遮罩（遮盖渲染画面的边缘；应用滤镜）
 end
