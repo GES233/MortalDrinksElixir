@@ -24,3 +24,7 @@ mord_ex-*.tar
 
 # Like normal phoenix project
 priv/static/assets/
+
+# Ignore audio cause copyright
+/priv/media/
+!/priv/media/*.md

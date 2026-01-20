@@ -5,8 +5,8 @@ An Elixir implementation of `GodDrinksJava` from Mili's `World.execute(me);`.
 ## Inspiration  
 
 * Personal experiences and trauma  
-    * < https://ges233.github.io/2024/06/World-execute-me-lyrics-analyse/ >  
-* PVs (Music Videos) in other languages and formats created since 2019  
+    * <https://ges233.github.io/2024/06/World-execute-me-lyrics-analyse/>  
+* PVs (Music Videos) in other programming languages and formats that I seen since 2019  
 
 ### Screenshot
 
@@ -87,7 +87,7 @@ The source PV use Java, with a class name called `GodDrinksJava`. All lyrics can
 
 But adding implementation behind the lyrics is EXTREMELY difficult in any single language.
 
-In this polyglot version, lyrics are in Elixir and miniKanren (I like the original Scheme style).
+In this polyglot version, lyrics are in Elixir and miniKanren (I perfer original Scheme style).
 
 In the virtual part (lines starting with "If I ..."), I use `run*` queries with multiple conditions. In the reality part ("You have left" etc., and execution), I use Elixir[^decode].
 
