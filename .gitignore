@@ -23,4 +23,4 @@ erl_crash.dump
 mord_ex-*.tar
 
 # Like normal phoenix project
-priv/static/
+priv/static/assets/

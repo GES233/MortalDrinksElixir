@@ -7,39 +7,22 @@ defmodule MortalDrinksElixir.Conductor do
   @tick_interval 115
   @topic "world_clock"
 
-  # === Client API ===
-
   def start_link(_) do
-    GenServer.start_link(__MODULE__, 0, name: __MODULE__)
-  end
-
-  # === Subscription ===
-
-  def subscribe do
-    GenServer.cast(__MODULE__, {:subscribe, self()})
+    GenServer.start_link(__MODULE__, %{tick: 0}, name: __MODULE__)
   end
 
   @impl true
-  def handle_cast({:subscribe, pid}, state) do
-    {:noreply, %{state | subscribers: [pid | state.subscribers]}}
-  end
-
-  # === Server Callbacks ===
-
-  @impl true
-  def init(tick) do
-    Logger.info("🎼 Conductor is raising the baton...")
+  def init(state) do
+    Logger.info("Conductor is raising the baton...")
     schedule_next_tick()
-    {:ok, tick}
+    {:ok, state}
   end
 
   @impl true
-  def handle_info(:perform_tick, tick) do
+  def handle_info(:perform_tick, %{tick: tick} = state) do
     Phoenix.PubSub.broadcast(MortalDrinksElixir.PubSub, @topic, {:tick, tick})
-
     schedule_next_tick()
-
-    {:noreply, tick + 1}
+    {:noreply, %{state | tick: tick + 1}}
   end
 
   defp schedule_next_tick do

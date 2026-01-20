@@ -6,13 +6,15 @@ defmodule Mix.Tasks.J do
   use Mix.Task
 
   def run(_args) do
-    ex = File.cwd!()
-    |> Path.join("lib/**/**.ex")
-    |> Path.wildcard()
+    ex = Path.wildcard("lib/**/**.ex")
     |> Enum.reject(&String.contains?(&1, "mix"))
-    |> Enum.map(&File.read!(&1))
+    |> Enum.map(&"# #{&1}\n#{File.read!(&1)}")
     |> Enum.join("\n")
     |> String.trim()
+
+    js = Path.wildcard("lib/web_interface/assets/js/hooks/anime_renderer/scenes/*.js")
+      |> Enum.map(&"// #{&1}\n#{File.read!(&1)}")
+      |> Enum.join("\n\n")
 
     """
       #{File.read!("README.md")}
@@ -22,21 +24,15 @@ defmodule Mix.Tasks.J do
       ## JavaScript
 
       ```javascript
-      // js/hooks/anime_renderer/scenes
-      #{File.cwd!()
-      |> Path.join("lib/web_interface/assets/js/hooks/anime_renderer/scenes/*.js")
-      |> Path.wildcard()
-      |> Enum.map(&File.read!/1)
-      |> Enum.join("\n")
-      }
+      #{js}
 
-      // js/hooks/anime_renderer/math_core.js
+      // lib/web_interface/assets/js/hooks/anime_renderer/math_core.js
       #{File.read!("lib/web_interface/assets/js/hooks/anime_renderer/math_core.js")}
 
-      // js/hooks/anime_renderer.js
-      #{File.read!("lib/web_interface/assets/js/hooks/anime_renderer.js")}
+      // lib/web_interface/assets/js/hooks/anime_renderer/index.js
+      #{File.read!("lib/web_interface/assets/js/hooks/anime_renderer/index.js")}
 
-      // js/app.js
+      // lib/web_interface/assets/js/app.js
       #{File.read!("lib/web_interface/assets/js/app.js")}
       ```
 

@@ -27,7 +27,7 @@ defmodule WebInterface do
     socket("/live", Phoenix.LiveView.Socket)
 
     # When static resource is too large
-    plug(Plug.Static, from: {:mord_ex, "/priv/static"}, at: "/", only: ~w(assets))
+    plug(Plug.Static, from: {:mord_ex, "priv/static"}, at: "/", only: ~w(assets favicon.ico))
 
     plug(Plug.Session,
       store: :cookie,

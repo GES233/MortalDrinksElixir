@@ -30,7 +30,7 @@ config :mord_ex, WebInterface.Endpoint,
   # It's only local deployed, so doen't matter.
   live_view: [signing_salt: "S=g%GZB}pGWvr4F?cj9BGgOpSQ!cc%&F"],
   secret_key_base: "tMUyLPVk8LAWZhQN5Ea47QJZh3iCfZpgk5wWrvimE0C1mEc7g4cLPNbtxxp0BP5d",
-  pubsub_server: WebInterface.PubSub,
+  pubsub_server: MortalDrinksElixir.PubSub,
   render_errors: [
     formats: [html: WebInterface.ErrorHTML],
     layout: false
