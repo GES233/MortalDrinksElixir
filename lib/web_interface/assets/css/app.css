@@ -9,7 +9,7 @@
 @theme {
   --color-phosphor-main: #00ff41;
   --color-phosphor-shadow: #004411;
-  --color-terminal-black: #050505;
+  --color-terminal-black: #16161d; /* Use eigengrau color. */
   --color-panel-header: #111;
   --color-panel-border: #333;
   --font-lyrics: "Fira Code", Consolas, monospace;
