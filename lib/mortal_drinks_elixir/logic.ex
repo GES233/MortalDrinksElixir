@@ -26,6 +26,7 @@ defmodule MortalDrinksElixir.Logic do
       :error -> u
     end
   end
+
   def walk(u, _), do: u
 
   def unify(u, v, %State{subst: s, pid: pid} = state) do
@@ -50,12 +51,14 @@ defmodule MortalDrinksElixir.Logic do
   defp do_unify(u, v, s) when u == v, do: s
   defp do_unify(%Var{} = u, v, s), do: Map.put(s, u, v)
   defp do_unify(u, %Var{} = v, s), do: Map.put(s, v, u)
+
   defp do_unify([u | us], [v | vs], s) do
     case do_unify(u, v, s) do
       nil -> nil
       s_prime -> do_unify(us, vs, s_prime)
     end
   end
+
   defp do_unify(_, _, _), do: nil
 
   # --- Goals (Constructors) ---
@@ -64,8 +67,10 @@ defmodule MortalDrinksElixir.Logic do
   def eq(u, v) do
     fn state ->
       case unify(u, v, state) do
-        nil -> [] # 失败返回空流
-        new_state -> [new_state] # 成功返回包含新状态的流
+        # 失败返回空流
+        nil -> []
+        # 成功返回包含新状态的流
+        new_state -> [new_state]
       end
     end
   end
@@ -75,12 +80,21 @@ defmodule MortalDrinksElixir.Logic do
   def conj(g1, g2) do
     fn state ->
       state
-      |> g1.() # 执行第一个目标
-      |> Stream.flat_map(g2) # 将结果流传递给第二个目标
+      # 执行第一个目标
+      |> g1.()
+      # 将结果流传递给第二个目标
+      |> Stream.flat_map(g2)
     end
   end
 
   # Where's disj?
+  def disj(g1, g2) do
+    fn state ->
+      Stream.concat(g1.(state), g2.(state))
+      # 更严格的实现应该用 interleaving (mplus)
+      # 以避免无限流吞掉另一个分支
+    end
+  end
 
   # call_fresh 负责引入逻辑变量
   def call_fresh(f) do
@@ -105,9 +119,10 @@ defmodule MortalDrinksElixir.Logic do
 
     # 1. 用 call_fresh 包装用户的查询块，以生成初始变量 q
     # start_goal 此时是一个 Goal 函数
-    start_goal = call_fresh(fn q ->
-      query_block.(q)
-    end)
+    start_goal =
+      call_fresh(fn q ->
+        query_block.(q)
+      end)
 
     # 2. === 关键修正 ===
     # 将初始状态传入 Goal 函数，从而启动整个链式反应，得到 Stream
