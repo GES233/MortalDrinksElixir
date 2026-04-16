@@ -7,6 +7,7 @@ defmodule MortalDrinksElixir do
   """
   use Application
 
+  @impl true
   def start(_start_type, _start_args) do
     # Load before Web interface activated.
     Makeup.Registry.register_lexer(
@@ -26,5 +27,11 @@ defmodule MortalDrinksElixir do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: MortalDrinksElixir.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  @impl true
+  def config_change(changed, _new, removed) do
+    WebInterface.Endpoint.config_change(changed, removed)
+    :ok
   end
 end
