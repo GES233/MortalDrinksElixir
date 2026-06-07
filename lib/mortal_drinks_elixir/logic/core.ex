@@ -145,43 +145,71 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   # --- 一些搜索策略之类的 ---
 
-  # mzero
-  # unit
-  # mplus
-  # bind
+  @type stream :: [] | {:mature, State.t(), stream()} | {:immature, (-> stream())}
+  @type goal :: (State.t() -> stream())
+
+  @spec mzero :: stream()
+  def mzero, do: []
+
+  @spec unit(State.t()) :: stream()
+  def unit(%State{} = state), do: {:mature, state, []}
+
+  @spec mplus(stream(), stream()) :: stream()
+  def mplus([], s2), do: s2
+  def mplus({:immature, f}, s2), do: {:immature, fn -> mplus(s2, f.()) end}
+  def mplus({:mature, h, t}, s2), do: {:mature, h, mplus(t, s2)}
+
+  @spec bind(stream(), goal()) :: stream()
+  def bind([], _g), do: []
+  def bind({:immature, f}, g), do: {:immature, fn -> bind(f.(), g) end}
+  def bind({:mature, h, t}, g), do: mplus(g.(h), bind(t, g))
 
   # --- Goals (Constructors) ---
 
-  # eq 返回一个 Goal (fn state -> stream)
+  @spec eq(Var.maybe_term(), Var.maybe_term()) :: goal()
   def eq(u, v) do
-    fn state ->
+    fn %State{} = state ->
       case unify(u, v, state) do
-        # 失败返回空流
-        nil -> []
-        # 成功返回包含新状态的流
-        new_state -> [new_state]
+        nil -> mzero()
+        new_state -> unit(new_state)
       end
     end
   end
 
-  # conj 返回一个 Goal
-  # 它执行 g1，得到状态流，然后对流中的每个状态执行 g2
+  @spec conj(goal(), goal()) :: goal()
   def conj(g1, g2) do
-    fn state ->
-      state
-      # 执行第一个目标
-      |> g1.()
-      # 将结果流传递给第二个目标
-      |> Stream.flat_map(g2)
+    fn %State{} = state -> mplus(g1.(state), g2.(state)) end
+  end
+
+  @spec disj(goal(), goal()) :: goal()
+  def disj(g1, g2) do
+    fn %State{} = state -> bind(g1.(state), g2) end
+  end
+
+  # 负责将 goal 的求值推迟
+  @spec delay(goal()) :: goal()
+  def delay(goal_fun) do
+    fn %State{} = state -> {:immature, fn -> goal_fun.(state) end} end
+  end
+
+  # 把流推进到 mature 或 [] 为止
+  defp pull([]), do: []
+  defp pull({:immature, f}), do: pull(f.())
+  defp pull({:mature, _, _} = s), do: s
+
+  def take(_stream, 0), do: []
+
+  def take(stream, n) do
+    case pull(stream) do
+      [] -> []
+      {:mature, h, t} -> [h | take(t, n - 1)]
     end
   end
 
-  # Where's disj?
-  def disj(g1, g2) do
-    fn state ->
-      Stream.concat(g1.(state), g2.(state))
-      # 更严格的实现应该用 interleaving (mplus)
-      # 以避免无限流吞掉另一个分支
+  def take_all(stream) do
+    case pull(stream) do
+      [] -> []
+      {:mature, h, t} -> [h | take_all(t)]
     end
   end
 
@@ -200,9 +228,54 @@ defmodule MortalDrinksElixir.Logic.Core do
     end
   end
 
-  # delay
-
   # --- Tookit ---
-  # reify
-  # run
+
+  # 深度 walk
+  def walk_star(v, s) do
+    v = walk(v, s)
+
+    cond do
+      Var.var?(v) ->
+        v
+
+      is_list(v) ->
+        Enum.map(v, &walk_star(&1, s))
+
+      is_tuple(v) ->
+        v |> Tuple.to_list() |> Enum.map(&walk_star(&1, s)) |> List.to_tuple()
+
+      true ->
+        v
+    end
+  end
+
+  # 把变量重命名成 _0, _1 ...
+  defp reify_s(v, s) do
+    v = walk(v, s)
+
+    cond do
+      Var.var?(v) -> Map.put(s, v, :"_#{map_size(s)}")
+      is_list(v) -> Enum.reduce(v, s, &reify_s/2)
+      is_tuple(v) -> v |> Tuple.to_list() |> Enum.reduce(s, &reify_s/2)
+      true -> s
+    end
+  end
+
+  def reify(var, %State{subst: s}) do
+    walked = walk_star(var, s)
+    walk_star(walked, reify_s(walked, %{}))
+  end
+
+  # run：引入查询变量 q，跑 n 个答案
+  def run(n, f) do
+    goal = call_fresh(f)
+
+    goal.(%State{})
+    |> take(n)
+    |> Enum.map(&reify(%Var{id: 0}, &1))
+  end
+
+  def run_all(f) do
+    call_fresh(f).(%State{}) |> take_all() |> Enum.map(&reify(%Var{id: 0}, &1))
+  end
 end
