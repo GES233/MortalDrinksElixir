@@ -18,7 +18,7 @@ defmodule MortalDrinksElixir.Logic.Core do
 
     # 为了让日志更好看，实现 String.Chars 协议
     defimpl String.Chars do
-      def to_string(%{id: id}), do: "_#{id}"
+      def to_string(%{id: id}), do: "?#{id}"
     end
   end
 
@@ -29,7 +29,7 @@ defmodule MortalDrinksElixir.Logic.Core do
     * `subst`: 替换表
     * `counter`: 用于生成新逻辑变量的计数器
     * `pid`: 接收遥测进程的 PID
-    * ·`constraints`: 一系列的约束
+    * `constraints`: 一系列的约束
     * `extension`: 用于扩展
     """
 
@@ -171,6 +171,18 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   defp check_constraints(_subst, []), do: true
 
+  defp check_constraints(subst, [{:type, x, kind} | rest]) do
+    x_w = walk_star(x, subst)
+    type_ok =
+      cond do
+        Var.var?(x_w) -> true
+        kind == :symbol -> is_atom(x_w)
+        kind == :number -> is_number(x_w)
+        true -> false
+      end
+    type_ok and check_constraints(subst, rest)
+  end
+
   defp check_constraints(subst, [{:diseq, u, v} | rest]) do
     walk_star(u, subst) != walk_star(v, subst) and check_constraints(subst, rest)
   end
@@ -182,6 +194,28 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   defp check_constraints(subst, [_unknown | rest]) do
     check_constraints(subst, rest)
+  end
+
+  @doc "if-then-else: 如果 g 成功则 commit 到 th，否则 el。不回溯 g 的其他解。"
+  @spec ifte(goal(), goal(), goal()) :: goal()
+  def ifte(g, th, el) do
+    fn %State{} = state ->
+      case pull(g.(state)) do
+        [] -> el.(state)
+        {:mature, h, _} -> th.(h)
+      end
+    end
+  end
+
+  @doc "只取 goal 的第一个解。"
+  @spec once(goal()) :: goal()
+  def once(g) do
+    fn %State{} = state ->
+      case pull(g.(state)) do
+        [] -> []
+        {:mature, h, _} -> unit(h)
+      end
+    end
   end
 
   # --- 一些搜索策略之类的 ---
@@ -313,6 +347,64 @@ defmodule MortalDrinksElixir.Logic.Core do
     walk_star(walked, reify_s(walked, %{}))
   end
 
+  @doc """
+  带约束的 reify：返回 `{value, residual_constraints}`。
+
+  constraints 中被 reify 过（Var → :_N 重命名），
+  只保留涉及查询变量的约束。
+  """
+  def reify_with_constraints(vars, %State{subst: s, constraints: cs})
+      when is_list(vars) do
+    # 先跑正常的 reify 拿到答案
+    values =
+      Enum.map(vars, fn var ->
+        walked = walk_star(var, s)
+        walk_star(walked, reify_s(walked, %{}))
+      end)
+
+    # 过滤约束：只保留涉及这些 var 的
+    var_ids = MapSet.new(vars, & &1.id)
+    reified_cs =
+      cs
+      |> Enum.filter(fn
+        {:diseq, u, v} -> involves_any?(u, s, var_ids) or involves_any?(v, s, var_ids)
+        {:absento, _sym, x} -> involves_any?(x, s, var_ids)
+        {:type, x, _kind} -> involves_any?(x, s, var_ids)
+        _ -> false
+      end)
+      |> Enum.map(&reify_constraint(&1, s))
+
+    {values, reified_cs}
+  end
+
+  defp involves_any?(%Var{id: id}, _s, var_ids), do: MapSet.member?(var_ids, id)
+  defp involves_any?(term, s, var_ids) when is_list(term) do
+    Enum.any?(term, &involves_any?(&1, s, var_ids))
+  end
+  defp involves_any?(term, s, var_ids) when is_tuple(term) do
+    term |> Tuple.to_list() |> Enum.any?(&involves_any?(&1, s, var_ids))
+  end
+  defp involves_any?(_term, _s, _var_ids), do: false
+
+  defp reify_constraint({:diseq, u, v}, s) do
+    u_w = walk_star(u, s)
+    v_w = walk_star(v, s)
+    rm = reify_s(u_w, reify_s(v_w, %{}))
+    {:diseq, walk_star(u_w, rm), walk_star(v_w, rm)}
+  end
+
+  defp reify_constraint({:absento, sym, x}, s) do
+    x_w = walk_star(x, s)
+    rm = reify_s(x_w, %{})
+    {:absento, sym, walk_star(x_w, rm)}
+  end
+
+  defp reify_constraint({:type, x, kind}, s) do
+    x_w = walk_star(x, s)
+    rm = reify_s(x_w, %{})
+    {:type, walk_star(x_w, rm), kind}
+  end
+
   # run：引入查询变量 q，跑 n 个答案
   def run(n, f) do
     q = %Var{id: 0}
@@ -324,5 +416,33 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   def run_all(f) do
     call_fresh(f).(%State{}) |> take_all() |> Enum.map(&reify(%Var{id: 0}, &1))
+  end
+
+  @doc """
+  多变量查询：`run(n, arity, fn [a, b, c] -> goal end)` 或 `fn {a, b} -> goal end`
+
+  返回对应形状的 tuple。
+  """
+  def run(n, arity, f) when is_integer(arity) and arity > 0 do
+    goal = build_fresh_chain(arity, [], f)
+
+    goal.(%State{})
+    |> take(n)
+    |> Enum.map(fn state ->
+      Enum.map(0..(arity - 1), fn i ->
+        reify(%Var{id: i}, state)
+      end)
+      |> List.to_tuple()
+    end)
+  end
+
+  defp build_fresh_chain(0, collected, f) do
+    f.(Enum.reverse(collected))
+  end
+
+  defp build_fresh_chain(n, collected, f) do
+    call_fresh(fn v ->
+      build_fresh_chain(n - 1, [v | collected], f)
+    end)
   end
 end
