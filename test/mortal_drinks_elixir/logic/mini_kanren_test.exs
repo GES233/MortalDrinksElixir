@@ -169,4 +169,16 @@ defmodule MortalDrinksElixir.Logic.MiniKanrenTest do
       assert results == []
     end
   end
+
+  test "diseq violated by later eq fails" do
+    results =
+      run(1, fn q ->
+        fresh x do
+          Core.conj(diseq(x, 1), Core.conj(eq(x, 1), eq(q, x)))
+        end
+      end)
+
+    # 应该失败
+    assert results == []
+  end
 end

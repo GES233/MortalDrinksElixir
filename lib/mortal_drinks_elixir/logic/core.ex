@@ -29,19 +29,24 @@ defmodule MortalDrinksElixir.Logic.Core do
     * `subst`: 替换表
     * `counter`: 用于生成新逻辑变量的计数器
     * `pid`: 接收遥测进程的 PID
-    * `extension`: 用于扩展（e.g. miniKanren 的 constraints）
+    * ·`constraints`: 一系列的约束
+    * `extension`: 用于扩展
     """
-    # 针对 extension 的操作用 get_in/pit_in 来吧
+
+    # 针对 extension 的操作用 get_in/put_in 来吧
 
     @type substitution :: %{Var.t() => term()}
+    @type constraint_type :: atom()
+    @type constraint :: {constraint_type(), Var.maybe_term(), Var.maybe_term()}
 
     @type t :: %__MODULE__{
             subst: substitution(),
             counter: non_neg_integer(),
             pid: pid() | nil,
+            constraints: [constraint()],
             extension: %{atom() => term()}
           }
-    defstruct subst: %{}, counter: 0, pid: nil, extension: %{}
+    defstruct subst: %{}, counter: 0, pid: nil, constraints: [], extension: %{}
   end
 
   # --- 核心操作 ---
@@ -57,7 +62,7 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   @spec unify(Var.maybe_term(), Var.maybe_term(), State.t()) ::
           nil | State.t()
-  def unify(u, v, %State{subst: s, pid: pid} = state) do
+  def unify(u, v, %State{subst: s, constraints: cs, pid: pid} = state) do
     result = unify_terms(u, v, s)
 
     if pid do
@@ -66,8 +71,15 @@ defmodule MortalDrinksElixir.Logic.Core do
     end
 
     case result do
-      nil -> nil
-      new_subst -> %{state | subst: new_subst}
+      nil ->
+        nil
+
+      new_subst ->
+        if check_constraints(new_subst, cs) do
+          %{state | subst: new_subst}
+        else
+          nil
+        end
     end
   end
 
@@ -145,6 +157,32 @@ defmodule MortalDrinksElixir.Logic.Core do
   end
 
   defp occurs_list?(_x, _non_list_tail, _s), do: false
+
+  defp absento_holds?(_sym, %Var{}), do: true
+
+  defp absento_holds?(sym, term) do
+    cond do
+      term == sym -> false
+      is_list(term) -> Enum.all?(term, &absento_holds?(sym, &1))
+      is_tuple(term) -> term |> Tuple.to_list() |> Enum.all?(&absento_holds?(sym, &1))
+      true -> true
+    end
+  end
+
+  defp check_constraints(_subst, []), do: true
+
+  defp check_constraints(subst, [{:diseq, u, v} | rest]) do
+    walk_star(u, subst) != walk_star(v, subst) and check_constraints(subst, rest)
+  end
+
+  defp check_constraints(subst, [{:absento, sym, x} | rest]) do
+    x_w = walk_star(x, subst)
+    absento_holds?(sym, x_w) and check_constraints(subst, rest)
+  end
+
+  defp check_constraints(subst, [_unknown | rest]) do
+    check_constraints(subst, rest)
+  end
 
   # --- 一些搜索策略之类的 ---
 
@@ -231,7 +269,7 @@ defmodule MortalDrinksElixir.Logic.Core do
     end
   end
 
-  # --- Tookit ---
+  # --- Toolkit ---
 
   # 深度 walk
   def walk_star(v, s) do
@@ -241,7 +279,8 @@ defmodule MortalDrinksElixir.Logic.Core do
       Var.var?(v) ->
         v
 
-      is_list(v) -> walk_star_list(v, s)
+      is_list(v) ->
+        walk_star_list(v, s)
 
       is_tuple(v) ->
         v |> Tuple.to_list() |> Enum.map(&walk_star(&1, s)) |> List.to_tuple()
@@ -276,11 +315,11 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   # run：引入查询变量 q，跑 n 个答案
   def run(n, f) do
-    goal = call_fresh(f)
+    q = %Var{id: 0}
 
-    goal.(%State{})
+    f.(q).(%State{counter: 1})
     |> take(n)
-    |> Enum.map(&reify(%Var{id: 0}, &1))
+    |> Enum.map(&reify(q, &1))
   end
 
   def run_all(f) do

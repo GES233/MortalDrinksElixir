@@ -10,7 +10,7 @@ defmodule MortalDrinksElixir.Logic.RelationsTest do
 
   describe "nullo/1" do
     test "succeeds for empty list" do
-      results = Core.run(1, fn q -> Relations.nullo([]) end)
+      results = Core.run(1, fn _ -> Relations.nullo([]) end)
       assert length(results) == 1
     end
 
