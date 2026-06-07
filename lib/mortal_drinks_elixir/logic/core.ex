@@ -178,18 +178,18 @@ defmodule MortalDrinksElixir.Logic.Core do
 
   @spec conj(goal(), goal()) :: goal()
   def conj(g1, g2) do
-    fn %State{} = state -> mplus(g1.(state), g2.(state)) end
+    fn %State{} = state -> bind(g1.(state), g2) end
   end
 
   @spec disj(goal(), goal()) :: goal()
   def disj(g1, g2) do
-    fn %State{} = state -> bind(g1.(state), g2) end
+    fn %State{} = state -> mplus(g1.(state), g2.(state)) end
   end
 
   # 负责将 goal 的求值推迟
-  @spec delay(goal()) :: goal()
+  @spec delay(( -> goal())) :: goal()
   def delay(goal_fun) do
-    fn %State{} = state -> {:immature, fn -> goal_fun.(state) end} end
+    fn %State{} = state -> {:immature, fn -> goal_fun.().(state) end} end
   end
 
   # 把流推进到 mature 或 [] 为止
