@@ -187,7 +187,7 @@ defmodule MortalDrinksElixir.Logic.Core do
   end
 
   # 负责将 goal 的求值推迟
-  @spec delay(( -> goal())) :: goal()
+  @spec delay((-> goal())) :: goal()
   def delay(goal_fun) do
     fn %State{} = state -> {:immature, fn -> goal_fun.().(state) end} end
   end
@@ -238,8 +238,7 @@ defmodule MortalDrinksElixir.Logic.Core do
       Var.var?(v) ->
         v
 
-      is_list(v) ->
-        Enum.map(v, &walk_star(&1, s))
+      is_list(v) -> walk_star_list(v, s)
 
       is_tuple(v) ->
         v |> Tuple.to_list() |> Enum.map(&walk_star(&1, s)) |> List.to_tuple()
@@ -249,17 +248,23 @@ defmodule MortalDrinksElixir.Logic.Core do
     end
   end
 
+  defp walk_star_list([], _s), do: []
+  defp walk_star_list([h | t], s), do: [walk_star(h, s) | walk_star(t, s)]
+
   # 把变量重命名成 _0, _1 ...
   defp reify_s(v, s) do
     v = walk(v, s)
 
     cond do
       Var.var?(v) -> Map.put(s, v, :"_#{map_size(s)}")
-      is_list(v) -> Enum.reduce(v, s, &reify_s/2)
+      is_list(v) -> reify_s_list(v, s)
       is_tuple(v) -> v |> Tuple.to_list() |> Enum.reduce(s, &reify_s/2)
       true -> s
     end
   end
+
+  defp reify_s_list([], s), do: s
+  defp reify_s_list([h | t], s), do: reify_s(t, reify_s(h, s))
 
   def reify(var, %State{subst: s}) do
     walked = walk_star(var, s)
