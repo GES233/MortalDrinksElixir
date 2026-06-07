@@ -111,6 +111,9 @@ So here's the reason why I use phoenix but without `mix phx.new`'s scaffold.
     - 0-dependencies
   - Lyrics update
 - logic inference engine(miniKanren)
+  - [x] microKanren
+  - [ ] miniKanren
+  - [ ] S-expr
 - relation code writing
   - basic part
   - feeling(happiness, painful ...) (cascade emotion mechanism)
