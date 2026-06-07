@@ -22,6 +22,7 @@ config :tailwind,
   ]
 
 config :mord_ex, WebInterface.Endpoint,
+  code_reloader: true,
   http: [ip: {127, 0, 0, 1}, port: 4000],
   url: [host: "localhost"],
   check_origin: false,
