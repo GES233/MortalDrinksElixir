@@ -29,16 +29,19 @@ defmodule MortalDrinksElixir.Logic.Core do
     * `subst`: 替换表
     * `counter`: 用于生成新逻辑变量的计数器
     * `pid`: 接收遥测进程的 PID
+    * `extension`: 用于扩展（e.g. miniKanren 的 constraints）
     """
+    # 针对 extension 的操作用 get_in/pit_in 来吧
 
     @type substitution :: %{Var.t() => term()}
 
     @type t :: %__MODULE__{
             subst: substitution(),
             counter: non_neg_integer(),
-            pid: pid() | nil
+            pid: pid() | nil,
+            extension: %{atom() => term()}
           }
-    defstruct subst: %{}, counter: 0, pid: nil
+    defstruct subst: %{}, counter: 0, pid: nil, extension: %{}
   end
 
   # --- 核心操作 ---
